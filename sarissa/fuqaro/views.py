@@ -68,19 +68,13 @@ class PageSizeControl(PageNumberPagination):
 """ Manzillar """
 
 
-class DavlatListView(generics.ListAPIView):
+class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
     queryset = Davlat.objects.all()
     serializer_class = DavlatListSerializer
     permission_classes = (IsAuthenticated,)
-    # ordering_fields = ['name']
 
 
-    # filter_backends = [filters.FilterSet]
-    # filter_backends = [filters.OrderingFilter]
-''' tayyor '''
-
-
-class ViloyatListView(APIView):
+class ViloyatListView(APIView):  # manzil viloyat  №2
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
@@ -90,14 +84,14 @@ class ViloyatListView(APIView):
             davlatlar = Davlat.objects.filter(id=id)
             if id > 1 and davlatlar:
                 viloyat = Viloyat.objects.filter(id=15)
-                serializer = ViloyatSinovSerializer(viloyat, many=True)
+                serializer = ViloyatListSerializer(viloyat, many=True)
 
-                return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+                return Response({'viloyat': serializer.data}, status=status.HTTP_200_OK)
 
             elif id == 1:
                 viloyat = Viloyat.objects.filter(davlat_id=id)
-                serializer = ViloyatSinovSerializer(viloyat, many=True)
-                return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+                serializer = ViloyatListSerializer(viloyat, many=True)
+                return Response({'viloyat': serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'davlat id topilmadi'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -109,9 +103,7 @@ class ViloyatListView(APIView):
 ''' tayyor '''
 
 
-class TumanListView(APIView):
-
-
+class TumanListView(APIView):  # manzil tuman  №3
 
     def get(self, request):
 
@@ -123,20 +115,20 @@ class TumanListView(APIView):
 
             if viloyat_id != 15 and viloyatlar:
                 if tumanlar:
-                    serializer = TumanSerializer(tumanlar, many=True)
-                    return Response({'date': serializer.data}, status=status.HTTP_200_OK)
+                    serializer = TumanListSerializer(tumanlar, many=True)
+                    return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
             elif viloyat_id == 15:
                 '''boshqa viloyat id sidan chiqarish'''
                 tuman_boshqa = Tuman.objects.filter(viloyat_id=viloyat_id)
-                serializer = TumanSerializer(tuman_boshqa, many=True)
-                return Response({'date': serializer.data}, status=status.HTTP_200_OK)
+                serializer = TumanListSerializer(tuman_boshqa, many=True)
+                return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': "Viloyat id topilmadi"}, status=status.HTTP_404_NOT_FOUND)
         except:
             return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class MahallaListView(APIView):
+class MahallaListView(APIView):  # manzil mahalla №4
     def get(self, request):
         try:
             int(request.query_params['tuman_id'])
@@ -145,14 +137,18 @@ class MahallaListView(APIView):
             tumanlar = Tuman.objects.filter(id=tuman_id)
 
             if tuman_id != 255 and tumanlar:
+                print(mahallalar, 'qqqqqqqqqqqqqqqq')
                 if mahallalar:
-                    serializer = MahallaSerializer(mahallalar, many=True)
-                    return Response({'date': serializer.data}, status=status.HTTP_200_OK)
+                    print(mahallalar)
+                    serializer = MahallaListSerializer(mahallalar, many=True)
+                    return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'message': 'Tuman id  da mahalla yoq'}, status=status.HTTP_404_NOT_FOUND)
 
             elif tuman_id == 255:
                 boshqa_tuman = Mahalla.objects.filter(id=570)
-                serializer = MahallaSerializer(boshqa_tuman, many=True)
-                return Response({'date': serializer.data}, status=status.HTTP_200_OK)
+                serializer = MahallaListSerializer(boshqa_tuman, many=True)
+                return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
 
             else:
                 return Response({'message': 'Tuman id topilmadi'}, status=status.HTTP_404_NOT_FOUND)
@@ -160,7 +156,7 @@ class MahallaListView(APIView):
             return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class KuchaListView(generics.ListAPIView):
+class KuchaListView(generics.ListAPIView):      # manzil kucha  №5
     # permission_classes = (DjangoModelPermissions,)
     def get(self, request):
         try:
@@ -170,12 +166,12 @@ class KuchaListView(generics.ListAPIView):
 
             if mahalla_id != 570 and mahallalar:
                 if kuchalar:
-                    serializer = KuchaSerializer(mahallalar, many=True)
-                    return Response({'date': serializer.data}, status=status.HTTP_200_OK)
+                    serializer = KuchaSerializer(kuchalar, many=True)
+                    return Response({'kucha': serializer.data}, status=status.HTTP_200_OK)
             elif mahalla_id == 570:
                 boshqa_mahalla = Kucha.objects.filter(id=3297)
                 serializer = KuchaSerializer(boshqa_mahalla, many=True)
-                return Response({'date': serializer.data}, status=status.HTTP_200_OK)
+                return Response({'kucha': serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'mahalla id topilmadi'}, status=status.HTTP_404_NOT_FOUND)
 

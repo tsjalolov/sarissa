@@ -6,65 +6,43 @@ from .models import *
 """ Manzillar """
 
 
-class DavlatListSerializer(serializers.ModelSerializer):
+class DavlatListSerializer(serializers.ModelSerializer):  # manzil davlat  №1
     class Meta:
         model = Davlat
         fields = "__all__"
 
 
 '''sinov'''
-class ViloyatSinovSerializer(serializers.ModelSerializer):
+
+
+class ViloyatListSerializer(serializers.ModelSerializer):  # manzil viloyat  №2
 
     class Meta:
         model = Viloyat
-        fields = ("id", "name", "davlat")
+        fields = ("id", "name")
 
 
-class ViloyatListSerializer(serializers.ModelSerializer):
-    davlat = DavlatListSerializer()
-
-    class Meta:
-        model = Viloyat
-        fields = '__all__'
+''' tuman '''
 
 
-class ViloyatSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Viloyat
-        fields = ['id', 'name', ]
-
-
-class TumanListSerializer(serializers.ModelSerializer):
-    viloyat_id = ViloyatSerializer()
-
-    class Meta:
-        model = Tuman
-        fields = '__all__'
-
-
-class TumanSerializer(serializers.ModelSerializer):
+class TumanListSerializer(serializers.ModelSerializer):  # manzil tuman №3
     class Meta:
         model = Tuman
         fields = ['id', 'name', ]
 
 
-class MahallaListSerializer(serializers.ModelSerializer):
-    tuman_id = TumanListSerializer()
-
-    class Meta:
-        model = Mahalla
-        fields = '__all__'
+''' mahalla '''
 
 
-class MahallaSerializer(serializers.ModelSerializer):
+class MahallaListSerializer(serializers.ModelSerializer): # manzil tuman №4
     class Meta:
         model = Mahalla
         fields = ['id', 'name', ]
 
 
-class KuchaListSerializer(serializers.ModelSerializer):
+
+class KuchaListSerializer(serializers.ModelSerializer):         # manzil kucha  №5
     mahalla_id = MahallaListSerializer()
-
 
     class Meta:
         model = Kucha
@@ -100,13 +78,13 @@ class MillatListSerializer(serializers.ModelSerializer):
 
 class FuqaroListSerializer(serializers.ModelSerializer):
     tug_joy_davlat_id = DavlatListSerializer()
-    tug_joy_tuman_id = TumanSerializer()
+    tug_joy_tuman_id = TumanListSerializer()
     millat_id = MillatListSerializer()
-    pass_kim_bergan_tuman_id = TumanSerializer()
+    pass_kim_bergan_tuman_id = TumanListSerializer()
     jins = JinsListSerializer()
-    doimiy_viloyat = ViloyatSerializer()
-    doimiy_tuman = TumanSerializer()
-    doimiy_mahalla = MahallaSerializer()
+    doimiy_viloyat = ViloyatListSerializer()
+    doimiy_tuman = TumanListSerializer()
+    doimiy_mahalla = MahallaListSerializer()
     doimiy_kucha = KuchaSerializer()
     add_user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
@@ -124,11 +102,11 @@ class FuqaroSerializer(serializers.ModelSerializer):
         fields = ['id', 'jshir', 'familiya', 'ism', 'sharif', ]
 
 
-
 class BazaFuqaroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baza_Fuqaro
         fields = '__all__'
+
 
 """ Boshqa Manzil """
 
@@ -156,6 +134,7 @@ class FuqarolikTuriListSerializer(serializers.ModelSerializer):
 
 """ Usmir """
 
+
 class UsmirSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usmir
@@ -170,9 +149,9 @@ class BazaUsmirSerializer(serializers.ModelSerializer):
 
 class UsmirListSerializer(serializers.ModelSerializer):
     tug_joy_davlat_id = DavlatListSerializer()
-    tug_joy_tuman_id = TumanSerializer()
+    tug_joy_tuman_id = TumanListSerializer()
     millat_id = MillatListSerializer()
-    guvohnoma_kim_bergan_tuman_id = TumanSerializer()
+    guvohnoma_kim_bergan_tuman_id = TumanListSerializer()
     jins_id = JinsListSerializer()
     add_user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
@@ -210,7 +189,7 @@ class TashkilotTurListSerializer(serializers.ModelSerializer):
 
 class TashkilotListSerializer(serializers.ModelSerializer):
     tashkilot_turi = TashkilotTurListSerializer()
-    tuman_id = TumanSerializer()
+    tuman_id = TumanListSerializer()
 
     class Meta:
         model = Tashkilot
@@ -238,7 +217,7 @@ class TashkilotTelListSerializer(serializers.ModelSerializer):
 
 class MahallaOPListSerializer(serializers.ModelSerializer):
     tashkilot = TashkilotListSerializer()
-    mahalla = MahallaSerializer()
+    mahalla = MahallaListSerializer()
 
     class Meta:
         model = Mahalla_op
