@@ -1,3 +1,4 @@
+from pip._internal.cli.cmdoptions import list_exclude
 from rest_framework import serializers
 
 from fuqaro_uchot.models import *
@@ -10,9 +11,6 @@ class DavlatListSerializer(serializers.ModelSerializer):  # manzil davlat  №1
     class Meta:
         model = Davlat
         fields = "__all__"
-
-
-'''sinov'''
 
 
 class ViloyatListSerializer(serializers.ModelSerializer):  # manzil viloyat  №2
@@ -34,14 +32,13 @@ class TumanListSerializer(serializers.ModelSerializer):  # manzil tuman №3
 ''' mahalla '''
 
 
-class MahallaListSerializer(serializers.ModelSerializer): # manzil tuman №4
+class MahallaListSerializer(serializers.ModelSerializer):  # manzil tuman №4
     class Meta:
         model = Mahalla
         fields = ['id', 'name', ]
 
 
-
-class KuchaListSerializer(serializers.ModelSerializer):         # manzil kucha  №5
+class KuchaListSerializer(serializers.ModelSerializer):  # manzil kucha  №5
     mahalla_id = MahallaListSerializer()
 
     class Meta:
@@ -49,25 +46,19 @@ class KuchaListSerializer(serializers.ModelSerializer):         # manzil kucha  
         fields = '__all__'
 
 
-class KuchaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Kucha
-        fields = ['id', 'name', ]
-
-
 """ Jins """
 
 
-class JinsListSerializer(serializers.ModelSerializer):
+class JinsListSerializer(serializers.ModelSerializer):  # jins  №7
     class Meta:
         model = Jins
-        fields = '__all__'
+        fields = ['id', 'name', ]
 
 
 """ Millat """
 
 
-class MillatListSerializer(serializers.ModelSerializer):
+class MillatListSerializer(serializers.ModelSerializer):  # millat  №8
     class Meta:
         model = Millat
         fields = '__all__'
@@ -85,7 +76,7 @@ class FuqaroListSerializer(serializers.ModelSerializer):
     doimiy_viloyat = ViloyatListSerializer()
     doimiy_tuman = TumanListSerializer()
     doimiy_mahalla = MahallaListSerializer()
-    doimiy_kucha = KuchaSerializer()
+    doimiy_kucha = KuchaListSerializer()
     add_user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
@@ -111,7 +102,7 @@ class BazaFuqaroSerializer(serializers.ModelSerializer):
 """ Boshqa Manzil """
 
 
-class BoshqaManzilListSerializer(serializers.ModelSerializer):
+class BoshqaManzilListSerializer(serializers.ModelSerializer):  # manzil boshqa manzil  №6
     fuqaro_id = FuqaroSerializer()
     yashash_viloyat = serializers.SlugRelatedField(slug_field='name', read_only=True)
     yashash_tuman = serializers.SlugRelatedField(slug_field='name', read_only=True)
@@ -126,7 +117,7 @@ class BoshqaManzilListSerializer(serializers.ModelSerializer):
 """ Fuqarolik turi """
 
 
-class FuqarolikTuriListSerializer(serializers.ModelSerializer):
+class FuqarolikTuriListSerializer(serializers.ModelSerializer):  # fuqaro_tur №9
     class Meta:
         model = Fuqarolik_turi
         fields = "__all__"
@@ -136,9 +127,15 @@ class FuqarolikTuriListSerializer(serializers.ModelSerializer):
 
 
 class UsmirSerializer(serializers.ModelSerializer):
+    tug_joy_davlat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    tug_joy_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    millat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    guvohnoma_kim_bergan_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    jins = serializers.SlugRelatedField(slug_field='name', read_only=True)
+
     class Meta:
         model = Usmir
-        fields = "__all__"
+        exclude = ('add_user', 'qushulgan_sana', 'yangilangan_sana', 'migrant',)
 
 
 class BazaUsmirSerializer(serializers.ModelSerializer):
@@ -175,8 +172,7 @@ class ChetElFuqarosiListSerializer(serializers.ModelSerializer):
 class mkb10ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mkb10
-        fields = "__all__"
-
+        fields = ('id', 'r', 'name')
 
 """ Tashkilotlar """
 

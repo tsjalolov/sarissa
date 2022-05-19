@@ -42,6 +42,7 @@ from django.db.models import Count
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
@@ -60,9 +61,9 @@ from rest_framework.permissions import IsAuthenticated
 
 class PageSizeControl(PageNumberPagination):
     '''aloxida ulash uchun'''
-    page_size = 3
+    page_size = 15
     page_size_query_param = 'page_size'
-    max_page_size = 10000
+    max_page_size = 100
 
 
 """ Manzillar """
@@ -156,7 +157,7 @@ class MahallaListView(APIView):  # manzil mahalla №4
             return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class KuchaListView(generics.ListAPIView):      # manzil kucha  №5
+class KuchaListView(generics.ListAPIView):  # manzil kucha  №5
     # permission_classes = (DjangoModelPermissions,)
     def get(self, request):
         try:
@@ -166,11 +167,11 @@ class KuchaListView(generics.ListAPIView):      # manzil kucha  №5
 
             if mahalla_id != 570 and mahallalar:
                 if kuchalar:
-                    serializer = KuchaSerializer(kuchalar, many=True)
+                    serializer = KuchaListSerializer(kuchalar, many=True)
                     return Response({'kucha': serializer.data}, status=status.HTTP_200_OK)
             elif mahalla_id == 570:
                 boshqa_mahalla = Kucha.objects.filter(id=3297)
-                serializer = KuchaSerializer(boshqa_mahalla, many=True)
+                serializer = KuchaListSerializer(boshqa_mahalla, many=True)
                 return Response({'kucha': serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'mahalla id topilmadi'}, status=status.HTTP_404_NOT_FOUND)
@@ -183,15 +184,25 @@ class KuchaListView(generics.ListAPIView):      # manzil kucha  №5
 """ Boshqa manzil """
 
 
-class BoshqaManzilListView(generics.ListAPIView):
-    queryset = Boshqa_manzili.objects.all()
-    serializer_class = BoshqaManzilListSerializer
+class BoshqaManzilListView(APIView):  # manzil boshqa manzil  №6
+
+    def get(self, request):
+        try:
+            fuqaro_id = int(request.query_params['fuqaro_id'])
+            boshqa_manzil = Boshqa_manzili.objects.filter(fuqaro_id=fuqaro_id)
+
+        except:
+            return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
+        if boshqa_manzil:
+            serializer = BoshqaManzilListSerializer(boshqa_manzil, many=True)
+            return Response({'boshqa manzil': serializer.data}, status=status.HTTP_200_OK)
+        return Response({'message': 'fuqaroning boshqa manzili yoq'}, status=status.HTTP_404_NOT_FOUND)
 
 
 """ Jins """
 
 
-class JinsListView(generics.ListAPIView):
+class JinsListView(generics.ListAPIView):  # jins  №7
     queryset = Jins.objects.all()
     serializer_class = JinsListSerializer
 
@@ -199,7 +210,7 @@ class JinsListView(generics.ListAPIView):
 """ Millat """
 
 
-class MillatListView(generics.ListAPIView):
+class MillatListView(generics.ListAPIView):  # millat  №8
     queryset = Millat.objects.all()
     serializer_class = MillatListSerializer
 
@@ -223,10 +234,18 @@ class TashkilotFuqaroFilter(django_filters.FilterSet):
         fields = ['add_user__tashkilot']
 
 
+""" Fuqarolik turi """
+
+
+class FuqarolikTuriListView(generics.ListAPIView):  # fuqaro_tur №9
+    queryset = Fuqarolik_turi.objects.all()
+    serializer_class = FuqarolikTuriListSerializer
+
+
 """ Fuqarolar """
 
 
-class FuqaroListView(APIView):
+class FuqaroListView(APIView):  # fuqaro №10
 
     def get(self, request):
 
@@ -247,29 +266,25 @@ class FuqaroListView(APIView):
                         serializer_fuqaro = BazaFuqaroSerializer(bazafuqaro[0])
                         return Response({'baza_status': 2, 'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
 
-                    return Response({'baza_status': 1, 'jshir': jshir}, status=status.HTTP_204_NO_CONTENT)
+                    return Response({'baza_status': 1, 'jshir': jshir}, status=status.HTTP_200_OK)
 
-            return Response({'message': 'uzunlik xato'})  # jsir 14 emas
+            return Response({'message': 'uzunlik xato'}, status=status.HTTP_404_NOT_FOUND)  # jsir 14 emas
 
         except:
-            return Response({'message': 'xato jshir'})
-
-
-""" Fuqarolik turi """
-
-
-class FuqarolikTuriListView(generics.ListAPIView):
-    queryset = Fuqarolik_turi.objects.all()
-    serializer_class = FuqarolikTuriListSerializer
+            return Response({'message': 'xato jshir'}, status=status.HTTP_404_NOT_FOUND)
 
 
 """ Usmir """
 
 
-class UsmirListView(APIView):
+class UsmirListView(APIView):  # usmir   №11
 
-    # def get(self, request):
-    #     return Response({'user': 'sss'})
+    #
+    # def post(self,request):
+    #     usmir = Millat.objects.filter().order_by('-id')[:5]
+    #     print(usmir)
+    #
+    #     return Response({'mess':'111'})
 
     def get(self, request):
         try:
@@ -280,26 +295,19 @@ class UsmirListView(APIView):
                 Q(guvohnoma_seriyasi=guvohnoma_seriya) & Q(guvohnoma_raqami=guvohnoma_raqam))
             if usmir:
                 serializer_usmir = UsmirSerializer(usmir, many=True)
-                return Response({'baza_status': 7, 'messenger': serializer_usmir.data}, status=HTTP_200_OK)
+                return Response({'baza_status': 7, 'fuqaro_turi': 2, 'messenger': serializer_usmir.data},
+                                status=HTTP_200_OK)
             elif baza_usmir:
                 serializer_usmir = BazaUsmirSerializer(baza_usmir, many=True)
-                return Response({'baza_status': 2, 'messenger': serializer_usmir.data}, status=HTTP_200_OK)
+                return Response({'baza_status': 2, 'fuqaro_turi': 2, 'messenger': serializer_usmir.data},
+                                status=HTTP_200_OK)
 
             else:
                 return Response({'baza_status': 1, 'seriya': guvohnoma_seriya, 'raqam': guvohnoma_raqam, },
-                                status=HTTP_204_NO_CONTENT)
+                                status=HTTP_200_OK)
 
         except:
-            return Response({'messenger': 'xato parametr'}, status=HTTP_204_NO_CONTENT)
-
-
-""" ChetEl Fuqarosi """
-
-
-class ChetElFuqarosiListView(generics.ListCreateAPIView):
-    queryset = ChetElFuqarosi.objects.all()
-    serializer_class = ChetElFuqarosiListSerializer
-    pagination_class = PageSizeControl
+            return Response({'messenger': 'xato parametr'}, status=status.HTTP_404_NOT_FOUND)
 
 
 """ mkb10 """
@@ -309,6 +317,9 @@ class mkb10ListView(generics.ListAPIView):
     queryset = mkb10.objects.all()
     serializer_class = mkb10ListSerializer
     pagination_class = PageSizeControl
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['r', 'name']
+    ordering_fields = ['name']
 
 
 """ Tashkilotlar """
@@ -338,6 +349,11 @@ class TashkilotTelListView(generics.ListAPIView):
 class MahallaOPListView(generics.ListAPIView):
     queryset = Mahalla_op.objects.all()
     serializer_class = MahallaOPListSerializer
+    pagination_class = PageSizeControl
+
+
+
+
 
 # class tugsana(APIView):
 #     def get(self, request):

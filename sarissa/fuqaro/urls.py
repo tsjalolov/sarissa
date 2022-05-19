@@ -10,18 +10,20 @@ urlpatterns = [
     path('mahalla/', MahallaListView.as_view()),  # manzil mahalla №4
     path('kucha/', KuchaListView.as_view()),  # manzil kucha  №5
 
-    path('boshqa_manzil/', BoshqaManzilListView.as_view()),  # boshqaManzil
+    path('boshqa_manzil/', BoshqaManzilListView.as_view()),  # manzil boshqa manzil  №6
 
-    path('jins/', JinsListView.as_view()),  # jins
+    path('jins/', JinsListView.as_view()),  # jins          # jins  №7
 
-    path('millat/', MillatListView.as_view()),  # millat
+    path('millat/', MillatListView.as_view()),  # millat      # millat  №8
 
-    path('fuqaro/', FuqaroListView.as_view()),  # fuqaro
-    path('fuqarolik_turi/', FuqarolikTuriListView.as_view()),  # fuqaro_tur
+    path('fuqarolik_turi/', FuqarolikTuriListView.as_view()),  # fuqaro_tur №9
 
-    path('usmir/', UsmirListView.as_view()),  # usmir
+    path('fuqaro/', FuqaroListView.as_view()),  # fuqaro       # fuqaro №10
 
-    path('chet_el_fuqaro/', ChetElFuqarosiListView.as_view()),  # ChetEl_Fuqaro
+
+    path('usmir/', UsmirListView.as_view()),  # usmir            # usmir   №11
+
+    # path('chet_el_fuqaro/', ChetElFuqarosiListView.as_view()),  # ChetEl_Fuqaro
 
     path('mkb10/', mkb10ListView.as_view()),  # mkb10
 
