@@ -337,23 +337,40 @@ class TashkilotListView(generics.ListAPIView):
 
 
 class TashkilotQushimchaMalumotListView(generics.ListAPIView):
-    queryset = Tashkilot_qushimcha_malumot.objects.all()
-    serializer_class = TashkilotQushimchaMalumotListSerializer
+    def get(self, request, **kwargs):
+        try:
+            tashkilot_id = int(request.query_params['tashkilot_id'])
+
+
+        except Exception  as e:
+            return Response({'message': 'xato parametr'}, )
+
+        queryset = Tashkilot_qushimcha_malumot.objects.filter(tashkilot_id=tashkilot_id)
+        serializer_class = TashkilotQushimchaMalumotListSerializer(queryset, many=True)
+        return Response({'message': serializer_class.data}, status=status.HTTP_404_NOT_FOUND)
+
+        # queryset = Tashkilot_qushimcha_malumot.objects.all()
+        # serializer_class = TashkilotQushimchaMalumotListSerializer
 
 
 class TashkilotTelListView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    # pagination_class = PageSizeControl
     queryset = Tashkilot_Tel.objects.all()
     serializer_class = TashkilotTelListSerializer
 
 
 class MahallaOPListView(generics.ListAPIView):
-    queryset = Mahalla_op.objects.all()
-    serializer_class = MahallaOPListSerializer
+    permission_classes = (IsAuthenticated,)
     pagination_class = PageSizeControl
 
+    def get(self, request, **kwargs):
+        qwer = request.user
+        tash_id = qwer.tashkilot_id
 
-
-
+        queryset = Mahalla_op.objects.filter(tashkilot=tash_id)
+        serializer_class = MahallaOPListSerializer(queryset, many=True)
+        return Response({'mahallalar': serializer_class.data})
 
 # class tugsana(APIView):
 #     def get(self, request):

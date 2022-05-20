@@ -135,7 +135,7 @@ class UchotAddApiView(APIView):
 
         try:
             (int(fuqaro_turi_id) and int(fuqaro_turi_id))
-            fuqaro_turi = Fuqarolik_turi.objects.get(id=fuqaro_turi_id)
+            # fuqaro_turi = Fuqarolik_turi.objects.get(
 
         except Exception  as e:
 

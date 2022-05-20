@@ -193,15 +193,15 @@ class TashkilotListSerializer(serializers.ModelSerializer):
 
 
 class TashkilotQushimchaMalumotListSerializer(serializers.ModelSerializer):
-    tashkilot_id = TashkilotListSerializer()
+    # tashkilot_id = TashkilotListSerializer()
 
     class Meta:
         model = Tashkilot_qushimcha_malumot
-        fields = "__all__"
+        fields = ('fuqarolari_soni', 'oila_soni', 'tashkilot_id',)
 
 
 class TashkilotTelListSerializer(serializers.ModelSerializer):
-    tashkilot = TashkilotListSerializer()
+    # tashkilot = TashkilotListSerializer()
 
     class Meta:
         model = Tashkilot_Tel
