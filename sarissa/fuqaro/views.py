@@ -57,7 +57,7 @@ from django.db.models import Q
 from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
-
+from .permissions import MyPermission
 
 class PageSizeControl(PageNumberPagination):
     '''aloxida ulash uchun'''
@@ -72,13 +72,14 @@ class PageSizeControl(PageNumberPagination):
 class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
     queryset = Davlat.objects.all()
     serializer_class = DavlatListSerializer
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
 
 class ViloyatListView(APIView):  # manzil viloyat  №2
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [MyPermission,]
 
-    def get(self, request):
+
+    def get(self,request):
         try:
             int(request.query_params['davlat_id'])
             id = int(request.query_params['davlat_id'])
@@ -87,7 +88,7 @@ class ViloyatListView(APIView):  # manzil viloyat  №2
                 viloyat = Viloyat.objects.filter(id=15)
                 serializer = ViloyatListSerializer(viloyat, many=True)
 
-                return Response({'viloyat': serializer.data}, status=status.HTTP_200_OK)
+                return Response({'viloyat': 'serializer.data'}, status=status.HTTP_200_OK)
 
             elif id == 1:
                 viloyat = Viloyat.objects.filter(davlat_id=id)
@@ -130,6 +131,8 @@ class TumanListView(APIView):  # manzil tuman  №3
 
 
 class MahallaListView(APIView):  # manzil mahalla №4
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         try:
             int(request.query_params['tuman_id'])
@@ -138,7 +141,7 @@ class MahallaListView(APIView):  # manzil mahalla №4
             tumanlar = Tuman.objects.filter(id=tuman_id)
 
             if tuman_id != 255 and tumanlar:
-                print(mahallalar, 'qqqqqqqqqqqqqqqq')
+                # print(mahallalar, 'qqqqqqqqqqqqqqqq')
                 if mahallalar:
                     print(mahallalar)
                     serializer = MahallaListSerializer(mahallalar, many=True)

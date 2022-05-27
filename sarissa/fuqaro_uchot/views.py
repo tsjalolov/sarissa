@@ -2,15 +2,17 @@ import django_filters
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import generics, status
+from rest_framework import generics, status, filters
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from fuqaro.views import PageSizeControl
 from .models import *
 from .serializers import *
+from django_filters import rest_framework as filters
 
 
 class UchotTuriListView(generics.ListAPIView):
@@ -66,11 +68,10 @@ class UsmirUchotView(APIView):
         # return Response({'status': 'uchotga olinmagan', 'status_kod': 3})
 
 
-
 '''  id yuborganda uchotga olinganligini olib natija qaytaradi '''
+
+
 class UchotApiView(APIView):
-
-
 
     def get(self, request):
 
@@ -123,7 +124,9 @@ class UchotApiView(APIView):
 
             return Response({'fuqaro': 'yoq'})
 
+
 ''' uchotga olish  '''
+
 
 class UchotAddApiView(APIView):
 
@@ -148,19 +151,8 @@ class UchotAddApiView(APIView):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#  name = Firuz
+# viloyay = buxor
 # dekarater
 # @api_view(['get','POST'])
 # def get_one(request):

@@ -11,6 +11,9 @@ class UchotTuriListSerializer(serializers.ModelSerializer):
 
 
 class UchotListSerializer(serializers.ModelSerializer):
+    fuqaro = FuqaroSerializer()
+    usmir = UsmirSerializer()
+
     # tashkilot_id = serializers.SlugRelatedField(slug_field='nomi', read_only=True)
     # kucha_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
     # uchot_turi_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
