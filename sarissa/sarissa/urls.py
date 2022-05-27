@@ -22,7 +22,7 @@ urlpatterns = [
     # path('',include('fuqaro.urls')),
 
     path('api/v1/fuqaro/', include('fuqaro.urls')),
-    path('api/v1/', include('fuqaro_uchot.urls')),
+    path('api/v1/uchot/', include('fuqaro_uchot.urls')),
     # path('api/v1/', include('helper_app.urls')),
     # path('api/v1/', include('psix_uchot.urls')),
     # path('api/v1/', include('qandli_diabet_uchot.urls')),

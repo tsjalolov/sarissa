@@ -73,6 +73,7 @@ class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
     queryset = Davlat.objects.all()
     serializer_class = DavlatListSerializer
     permission_classes = (IsAuthenticated,)
+    # pagination_class = PageSizeControl
 
 
 class ViloyatListView(APIView):  # manzil viloyat  №2
