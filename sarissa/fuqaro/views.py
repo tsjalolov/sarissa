@@ -70,13 +70,17 @@ class PageSizeControl(PageNumberPagination):
 
 
 class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
-    queryset = Davlat.objects.all()
-    serializer_class = DavlatListSerializer
-    permission_classes = (IsAuthenticated,)
+    # queryset = Davlat.objects.all()[:5]
+    # serializer_class = DavlatListSerializer
+    # permission_classes = (IsAuthenticated,)
+
+
+    def get(self,request):
+        return Response({'message':'ssss'})
 
 
 class ViloyatListView(APIView):  # manzil viloyat  №2
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         try:
