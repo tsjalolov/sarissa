@@ -57,7 +57,7 @@ from django.db.models import Q
 from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
-from .permissions import MyPermission
+
 
 class PageSizeControl(PageNumberPagination):
     '''aloxida ulash uchun'''
@@ -72,14 +72,13 @@ class PageSizeControl(PageNumberPagination):
 class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
     queryset = Davlat.objects.all()
     serializer_class = DavlatListSerializer
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 
 class ViloyatListView(APIView):  # manzil viloyat  №2
-    permission_classes = [MyPermission,]
+    permission_classes = (IsAuthenticated,)
 
-
-    def get(self,request):
+    def get(self, request):
         try:
             int(request.query_params['davlat_id'])
             id = int(request.query_params['davlat_id'])
@@ -88,7 +87,7 @@ class ViloyatListView(APIView):  # manzil viloyat  №2
                 viloyat = Viloyat.objects.filter(id=15)
                 serializer = ViloyatListSerializer(viloyat, many=True)
 
-                return Response({'viloyat': 'serializer.data'}, status=status.HTTP_200_OK)
+                return Response({'viloyat': serializer.data}, status=status.HTTP_200_OK)
 
             elif id == 1:
                 viloyat = Viloyat.objects.filter(davlat_id=id)
@@ -131,8 +130,6 @@ class TumanListView(APIView):  # manzil tuman  №3
 
 
 class MahallaListView(APIView):  # manzil mahalla №4
-    permission_classes = (IsAuthenticated,)
-
     def get(self, request):
         try:
             int(request.query_params['tuman_id'])
@@ -141,7 +138,7 @@ class MahallaListView(APIView):  # manzil mahalla №4
             tumanlar = Tuman.objects.filter(id=tuman_id)
 
             if tuman_id != 255 and tumanlar:
-                # print(mahallalar, 'qqqqqqqqqqqqqqqq')
+                print(mahallalar, 'qqqqqqqqqqqqqqqq')
                 if mahallalar:
                     print(mahallalar)
                     serializer = MahallaListSerializer(mahallalar, many=True)
@@ -340,40 +337,23 @@ class TashkilotListView(generics.ListAPIView):
 
 
 class TashkilotQushimchaMalumotListView(generics.ListAPIView):
-    def get(self, request, **kwargs):
-        try:
-            tashkilot_id = int(request.query_params['tashkilot_id'])
-
-
-        except Exception  as e:
-            return Response({'message': 'xato parametr'}, )
-
-        queryset = Tashkilot_qushimcha_malumot.objects.filter(tashkilot_id=tashkilot_id)
-        serializer_class = TashkilotQushimchaMalumotListSerializer(queryset, many=True)
-        return Response({'message': serializer_class.data}, status=status.HTTP_404_NOT_FOUND)
-
-        # queryset = Tashkilot_qushimcha_malumot.objects.all()
-        # serializer_class = TashkilotQushimchaMalumotListSerializer
+    queryset = Tashkilot_qushimcha_malumot.objects.all()
+    serializer_class = TashkilotQushimchaMalumotListSerializer
 
 
 class TashkilotTelListView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
-    # pagination_class = PageSizeControl
     queryset = Tashkilot_Tel.objects.all()
     serializer_class = TashkilotTelListSerializer
 
 
 class MahallaOPListView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    queryset = Mahalla_op.objects.all()
+    serializer_class = MahallaOPListSerializer
     pagination_class = PageSizeControl
 
-    def get(self, request, **kwargs):
-        qwer = request.user
-        tash_id = qwer.tashkilot_id
 
-        queryset = Mahalla_op.objects.filter(tashkilot=tash_id)
-        serializer_class = MahallaOPListSerializer(queryset, many=True)
-        return Response({'mahallalar': serializer_class.data})
+
+
 
 # class tugsana(APIView):
 #     def get(self, request):
