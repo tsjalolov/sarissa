@@ -1,41 +1,3 @@
-'''from django.shortcuts import render
-from django.http import HttpResponse
-from django.contrib.auth.models import GroupManager, Group, Permission
-from .models import Tashkilot, CustomUser, CustomGroup
-from django.contrib.auth.hashers import make_password
-
- userga parol yozish
-def index(request):
-    # polzovatel kiritish
-    customer = CustomUser.objects.all().values()[0]
-    tashkilotlar = Tashkilot.objects.all().values()
-    groups = Group.objects.all().values()
-    #  print(groups)
-    for elem in tashkilotlar:
-        CustomUser.objects.create(
-            username=elem['login'],
-            password=make_password(elem['parol']),
-            tashkilot_id=elem['id'],
-            is_superuser=False,
-            is_staff=False,
-            is_active=True
-        )
-    return HttpResponse('hello')
-def second_index(request):
-    all_cus = CustomUser.objects.count()
-    # print(all_cus)
-    customers = CustomUser.objects.all().values()[1:]
-    # print((customers))
-    for elem in customers:
-        tashkilot_item = Tashkilot.objects.filter(id=elem['tashkilot_id']).values()
-        for item in tashkilot_item:
-            i = CustomGroup.objects.filter(tashkilot_turi_id=item['tashkilot_turi_id']).values()
-            a = (elem['id'], 'q', i[0]['group_ptr_id'])
-            print(a)
-
-    return HttpResponse(a)
-'''
-
 import datetime
 import django_filters
 from django.db.models import Count
@@ -47,7 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
-from rest_framework.permissions import DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions, DjangoObjectPermissions
 
 from django_filters import rest_framework as filters
 from django_filters import DateRangeFilter, DateFilter
@@ -66,20 +28,26 @@ class PageSizeControl(PageNumberPagination):
     max_page_size = 100
 
 
+class CustomDjangoModelPermissions(DjangoModelPermissions):
+    def __init__(self):
+        self.perms_map['GET'] = ['%(app_label)s.view_%(model_name)s']
+
+
 """ Manzillar """
 
 
 class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
     queryset = Davlat.objects.all()
     serializer_class = DavlatListSerializer
-    permission_classes = (IsAuthenticated,)
-    # pagination_class = PageSizeControl
+    permission_classes = (CustomDjangoModelPermissions,)
 
 
-class ViloyatListView(APIView):  # manzil viloyat  №2
-    permission_classes = (IsAuthenticated,)
+class ViloyatListView(generics.ListAPIView):  # manzil viloyat  №2
+    permission_classes = (CustomDjangoModelPermissions,)
+    serializer_class = ViloyatListSerializer
+    queryset = Viloyat.objects.all()
 
-    def get(self, request):
+    def list(self, request, *args, **kwargs):
         try:
             int(request.query_params['davlat_id'])
             id = int(request.query_params['davlat_id'])
@@ -105,10 +73,12 @@ class ViloyatListView(APIView):  # manzil viloyat  №2
 ''' tayyor '''
 
 
-class TumanListView(APIView):  # manzil tuman  №3
+class TumanListView(generics.ListCreateAPIView, generics.RetrieveDestroyAPIView):  # manzil tuman  №3
+    queryset = Tuman.objects.all()
+    serializer_class = TumanListSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
 
-    def get(self, request):
-
+    def list(self, request, *args, **kwargs):
         try:
             int(request.query_params['viloyat_id'])
             viloyat_id = int(request.query_params['viloyat_id'])
@@ -129,9 +99,22 @@ class TumanListView(APIView):  # manzil tuman  №3
         except:
             return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
 
+    def create(self, request, *args, **kwargs):
+        # jqwheuqwheq
 
-class MahallaListView(APIView):  # manzil mahalla №4
-    def get(self, request):
+        return Response({'message': 'post'})
+
+    def destroy(self, request, *args, **kwargs):
+
+        return Response({'message': 'dekter'})
+
+
+class MahallaListView(generics.ListAPIView):  # manzil mahalla №4
+    queryset = Mahalla.objects.all()
+    serializer_class = MahallaListSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def list(self, request, *args, **kwargs):
         try:
             int(request.query_params['tuman_id'])
             tuman_id = int(request.query_params['tuman_id'])
@@ -159,8 +142,11 @@ class MahallaListView(APIView):  # manzil mahalla №4
 
 
 class KuchaListView(generics.ListAPIView):  # manzil kucha  №5
-    # permission_classes = (DjangoModelPermissions,)
-    def get(self, request):
+    permission_classes = (CustomDjangoModelPermissions,)
+    queryset = Kucha.objects.all()
+    serializer_class = KuchaListSerializer
+
+    def list(self, request, *args, **kwargs):
         try:
             mahalla_id = int(request.query_params['mahalla_id'])
             kuchalar = Kucha.objects.filter(mahalla_id=mahalla_id)
@@ -185,9 +171,12 @@ class KuchaListView(generics.ListAPIView):  # manzil kucha  №5
 """ Boshqa manzil """
 
 
-class BoshqaManzilListView(APIView):  # manzil boshqa manzil  №6
+class BoshqaManzilListView(generics.ListAPIView):  # manzil boshqa manzil  №6
+    queryset = Boshqa_manzili.objects.all()
+    serializer_class = BoshqaManzilListSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
 
-    def get(self, request):
+    def list(self, request, *args, **kwargs):
         try:
             fuqaro_id = int(request.query_params['fuqaro_id'])
             boshqa_manzil = Boshqa_manzili.objects.filter(fuqaro_id=fuqaro_id)
@@ -246,9 +235,12 @@ class FuqarolikTuriListView(generics.ListAPIView):  # fuqaro_tur №9
 """ Fuqarolar """
 
 
-class FuqaroListView(APIView):  # fuqaro №10
+class FuqaroListView(generics.ListAPIView):  # fuqaro №10
+    queryset = Fuqaro.objects.all()
+    serializer_class = FuqaroListSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
 
-    def get(self, request):
+    def list(self, request, *args, **kwargs):
 
         try:
             jshir = int(request.query_params['jshir'])
@@ -278,16 +270,12 @@ class FuqaroListView(APIView):  # fuqaro №10
 """ Usmir """
 
 
-class UsmirListView(APIView):  # usmir   №11
+class UsmirListView(generics.ListAPIView):  # usmir   №11
+    queryset = Usmir.objects.all()
+    serializer_class = UsmirListSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
 
-    #
-    # def post(self,request):
-    #     usmir = Millat.objects.filter().order_by('-id')[:5]
-    #     print(usmir)
-    #
-    #     return Response({'mess':'111'})
-
-    def get(self, request):
+    def list(self, request, *args, **kwargs):
         try:
             guvohnoma_seriya = request.query_params['seriya']
             guvohnoma_raqam = int(request.query_params['raqam'])
@@ -351,10 +339,6 @@ class MahallaOPListView(generics.ListAPIView):
     queryset = Mahalla_op.objects.all()
     serializer_class = MahallaOPListSerializer
     pagination_class = PageSizeControl
-
-
-
-
 
 # class tugsana(APIView):
 #     def get(self, request):

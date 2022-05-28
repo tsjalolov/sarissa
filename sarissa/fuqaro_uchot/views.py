@@ -219,6 +219,7 @@ class UchotApiView(generics.RetrieveUpdateDestroyAPIView,generics.CreateAPIView)
 class FuqaroUchotApi(generics.RetrieveUpdateDestroyAPIView,generics.CreateAPIView):
     permission_classes = [IsAuthenticated, ]
 
+    # bu funksiya fuqaro turini taqqoslab uchotda bor yoki yo'qligini tekshiradi
     def frank_func(self, human_uchot, uchot_seriazlizer, tur_id, my_request):
         if len(human_uchot) == 0:
             print(uchot_seriazlizer.is_valid())
@@ -300,8 +301,10 @@ class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
     pagination_class = PageSizeControl
  #
     def uchot_tash_func(self, fuqaro_turi_id, tashkil_turi):
-        uchot = Uchot.objects.filter(Q(fuqaro_turi_id=fuqaro_turi_id) & Q(tashkilot_id=tashkil_turi))[:100]
-        uchot_serializer = UchotListSerializer(uchot, many=True)
+        uchot = Uchot.objects.filter(Q(fuqaro_turi_id=fuqaro_turi_id) & Q(tashkilot_id=tashkil_turi))
+        uchut_q = self.paginate_queryset(uchot)
+        uchot_serializer = UchotListSerializer(uchut_q, many=True)
+
         return Response({'message': fuqaro_turi_id, 'data': uchot_serializer.data,'count':uchot.count()}, status=status.HTTP_200_OK)
 
     def list(self, request,*args,**kwargs):
