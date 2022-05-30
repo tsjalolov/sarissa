@@ -18,7 +18,7 @@ urlpatterns = [
 
     path('fuqarolik_turi/', FuqarolikTuriListView.as_view()),  # fuqaro_tur №9
 
-    # path('fuqaro/', FuqaroListView.as_view()),  # fuqaro       # fuqaro №10
+    path('fuqaro/', FuqaroListView.as_view()),  # fuqaro       # fuqaro №10
 
 
     path('usmir/', UsmirListView.as_view()),  # usmir            # usmir   №11
