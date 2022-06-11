@@ -298,3 +298,10 @@ class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
                 'usmir': usmir,
                 'chet el': chetel
             }, status=status.HTTP_200_OK)
+
+
+class Ruyxat(generics.ListAPIView):
+    queryset = Uchot.objects.all()
+    serializer_class = UchotListSerializer
+    permission_classes = [DjangoModelPermissions, ]
+    pagination_class = PageSizeControl

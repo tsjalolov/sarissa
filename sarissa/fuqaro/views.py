@@ -124,11 +124,13 @@ class MahallaListView(generics.ListAPIView):  # manzil mahalla №4
             if tuman_id != 255 and tumanlar:
                 print(mahallalar, 'qqqqqqqqqqqqqqqq')
                 if mahallalar:
-                    print(mahallalar)
+                    # print(mahallalar)
                     serializer = MahallaListSerializer(mahallalar, many=True)
                     return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
                 else:
-                    return Response({'message': 'Tuman id  da mahalla yoq'}, status=status.HTTP_404_NOT_FOUND)
+                    mahallalar_tumanda_bulmasa = Mahalla.objects.filter(tuman_id=255)
+                    serializer = MahallaListSerializer(mahallalar_tumanda_bulmasa, many=True)
+                    return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
 
             elif tuman_id == 255:
                 boshqa_tuman = Mahalla.objects.filter(id=570)
@@ -354,3 +356,5 @@ class MahallaOPListView(generics.ListAPIView):
 #         return HttpResponse('Hello')
 
 # 2686
+
+
