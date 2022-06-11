@@ -219,6 +219,11 @@ class MahallaOPListSerializer(serializers.ModelSerializer):
         model = Mahalla_op
         fields = "__all__"
 
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['id', 'name', ]
+
 class TashkilotUserSerializer(serializers.ModelSerializer):
     tashkilot_turi = TashkilotTurListSerializer()
 
@@ -229,7 +234,8 @@ class TashkilotUserSerializer(serializers.ModelSerializer):
 
 class CustomUserListSerailizer(serializers.ModelSerializer):
     tashkilot = TashkilotUserSerializer()
+    groups = GroupSerializer(read_only=True, many=True)
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', "tashkilot", ]
+        fields = ['id', 'username', "tashkilot", "groups", ]
