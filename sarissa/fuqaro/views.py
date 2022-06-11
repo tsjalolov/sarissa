@@ -109,6 +109,36 @@ class TumanListView(generics.ListCreateAPIView, generics.RetrieveDestroyAPIView)
         return Response({'message': 'dekter'})
 
 
+
+ #tuman davlat idi bilan saralash
+class TumanDavlatBilanListView(generics.ListAPIView):  # manzil tuman  №3
+    queryset = Tuman.objects.all()
+    serializer_class = TumanListSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            int(request.query_params['viloyat_id'])
+            viloyat_id = int(request.query_params['viloyat_id'])
+            tumanlar = Tuman.objects.filter(viloyat_id=viloyat_id)
+            viloyatlar = Viloyat.objects.filter(id=viloyat_id)
+
+            if viloyat_id != 15 and viloyatlar:
+                if tumanlar:
+                    serializer = TumanListSerializer(tumanlar, many=True)
+                    return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
+            elif viloyat_id == 15:
+                '''boshqa viloyat id sidan chiqarish'''
+                tuman_boshqa = Tuman.objects.filter(viloyat_id=viloyat_id)
+                serializer = TumanListSerializer(tuman_boshqa, many=True)
+                return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': "Viloyat id topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
 class MahallaListView(generics.ListAPIView):  # manzil mahalla №4
     queryset = Mahalla.objects.all()
     serializer_class = MahallaListSerializer
@@ -198,6 +228,11 @@ class JinsListView(generics.ListAPIView):  # jins  №7
     queryset = Jins.objects.all()
     serializer_class = JinsListSerializer
 
+    # def list(self, request, *args, **kwargs):
+    #     users = request.user
+        # print(users.tashkilot_id)
+
+
 
 """ Millat """
 
@@ -267,6 +302,17 @@ class FuqaroListView(generics.ListAPIView):  # fuqaro №10
 
         except:
             return Response({'message': 'xato jshir'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class FuqaroCreate(generics.ListCreateAPIView):
+    queryset = Fuqaro.objects.all()
+    serializer_class = FuqaroListSerializer
+    permission_classes = (CustomDjangoModelPermissions, )
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = FuqaroListSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 """ Usmir """
@@ -357,4 +403,18 @@ class MahallaOPListView(generics.ListAPIView):
 
 # 2686
 
+
+class Ruyxatdanutgani(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserListSerailizer
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user:
+            xodim = CustomUser.objects.filter(id=self.request.user.id)
+            serializer = CustomUserListSerailizer(xodim, many=True)
+            return Response({'xodim': serializer.data}, status=status.HTTP_200_OK)
+            # return Davlat.objects.all()
+        else:
+            pass
 

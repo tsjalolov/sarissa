@@ -218,3 +218,18 @@ class MahallaOPListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mahalla_op
         fields = "__all__"
+
+class TashkilotUserSerializer(serializers.ModelSerializer):
+    tashkilot_turi = TashkilotTurListSerializer()
+
+    class Meta:
+        model = Tashkilot
+        fields = ['id', 'tashkilot_turi', 'nomi', 'tuman_tashkilotimi', 'tuman_id', ]
+
+
+class CustomUserListSerailizer(serializers.ModelSerializer):
+    tashkilot = TashkilotUserSerializer()
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', "tashkilot", ]

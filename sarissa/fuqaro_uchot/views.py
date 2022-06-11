@@ -253,7 +253,14 @@ class UchotApiView(generics.CreateAPIView):
 
 
 
-
+'''{
+    "fuqaro": 32010,
+    "usmir": null,
+    "chetel_fuqaro": null,
+    "fuqaro_turi_id":1,
+    "kucha_id": 52,
+    "uchot_turi_id":3
+}'''
 
 
 #    fuqaro_turi yuborilganda shu tashkilotning o'ziga tegishli fuqarolar ro'yxati chiqadi
@@ -300,8 +307,4 @@ class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
             }, status=status.HTTP_200_OK)
 
 
-class Ruyxat(generics.ListAPIView):
-    queryset = Uchot.objects.all()
-    serializer_class = UchotListSerializer
-    permission_classes = [DjangoModelPermissions, ]
-    pagination_class = PageSizeControl
+
