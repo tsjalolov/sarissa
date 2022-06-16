@@ -335,18 +335,21 @@ class Ruyxatdanutgani(generics.ListAPIView):
         }, status=status.HTTP_200_OK)
 
 
+'''o'ziga biriktirilgan mahallalarning ko'chalari chiqadi'''
+class MahallaOPListView(generics.ListAPIView):
+    queryset = Kucha.objects.all()
+    serializer_class = KuchaListSerializer
+    pagination_class = PageSizeControl
 
-
-    # def perform_create(self, serializer):
-    #     serializer.save(add_user=self.request.user)
-
-
-# class UchotAPIList(generics.ListAPIView):
-#     serializer_class = UchotListSerializer
-#     pagination_class = PageSizeControl
-#
-#     def get_queryset(self):
-#         tashkilot_nomi = self.request.user.tashkilot
-#         uchot = Uchot.objects.filter(tashkilot_id=tashkilot_nomi)
-#         if uchot:
-#             return uchot
+    def list(self, request, *args, **kwargs):
+        if self.request.user:
+            mahalla = Mahalla_op.objects.filter(tashkilot=self.request.user.tashkilot)
+            massiv = []
+            for x in mahalla.values():
+                massiv.append(x['mahalla_id'])
+            kucha = Kucha.objects.filter(mahalla_id__in=massiv)
+            print(kucha)
+            serializer = KuchaListSerializer(kucha, many=True)
+            return Response({'kuchalar': serializer.data}, status=status.HTTP_200_OK)
+        else:
+            pass

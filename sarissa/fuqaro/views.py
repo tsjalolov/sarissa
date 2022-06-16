@@ -122,7 +122,7 @@ class TumanDavlatBilanListView(generics.ListAPIView):  # manzil tuman  №3
         # print(viloyatlar.values()[0]['id'])
 
         if davlat:
-            if davlat_id < 1:
+            if davlat_id == 1:
                 massiv = []
                 for x in viloyatlar.values():
                     massiv.append(x['id'])

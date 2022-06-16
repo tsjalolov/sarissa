@@ -6,6 +6,7 @@ urlpatterns = [
     path('uchot_api/', UchotApiView.as_view()),
     path('uchot_api_tekshirish/', UchotTekshirishGet.as_view()),
     path('uchot_turi/', UchotTuriListView.as_view()),
+    path('uchot_mahalla/', MahallaOPListView.as_view()),
 
 
     path('uchot/', UchotTashkilotApiView.as_view()),  # uchotga olinganlarni ko'rish
