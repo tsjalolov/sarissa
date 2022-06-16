@@ -10,12 +10,12 @@ from fuqaro.views import PageSizeControl
 from .serializers import *
 from fuqaro.views import CustomDjangoModelPermissions
 
-'''
+
 class UchotTuriListView(generics.ListAPIView):
     queryset = UchotTuri.objects.all()
     serializer_class = UchotTuriListSerializer
 
-
+'''
 class UchotListView(APIView):
 
     def get(self, request):
@@ -66,9 +66,9 @@ class UsmirUchotView(APIView):
 
  # id yuborganda uchotga olinganligini olib natija qaytaradi 
 '''
-'''
 
-class UchotApiView(APIView):
+
+class UchotTekshirishGet(APIView):
 
     def get(self, request):
 
@@ -97,6 +97,12 @@ class UchotApiView(APIView):
                                                 status=status.HTTP_200_OK)
                             return Response({'data': serializer_fuqaro.data, 'fuqaro': 'fuqaro', 'status': 5,
                                              'status_message': 'uchotga olib bolmaydi'}, status=status.HTTP_200_OK)
+                else:
+                    fuqaro = Fuqaro.objects.filter(id=human_id)
+                    if fuqaro:
+                        return Response({'status': 6,'status_message': 'uchotga olish mumkin'},
+                                        status=status.HTTP_200_OK)
+
 
                 return Response({'message': 'fuqaro id yoq'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -121,7 +127,7 @@ class UchotApiView(APIView):
 
             return Response({'fuqaro': 'yoq'})
 
-
+'''
  # uchotga olish  
 
 
@@ -308,3 +314,39 @@ class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
 
 
 
+class Ruyxatdanutgani(generics.ListAPIView):
+    queryset = Uchot.objects.all()
+    serializer_class = UchotListSerializer
+    permission_classes = [DjangoModelPermissions, ]
+    pagination_class = PageSizeControl
+
+    def list(self, request, *args, **kwargs):
+        users = request.user
+
+        fuqaro = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=users.tashkilot_id)).count()
+        usmir = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=users.tashkilot_id)).count()
+        chetel = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=users.tashkilot_id)).count()
+        jami = fuqaro + usmir + chetel
+        return Response({
+            'jami': jami,
+            'fuqaro': fuqaro,
+            'usmir': usmir,
+            'chet el': chetel
+        }, status=status.HTTP_200_OK)
+
+
+
+
+    # def perform_create(self, serializer):
+    #     serializer.save(add_user=self.request.user)
+
+
+# class UchotAPIList(generics.ListAPIView):
+#     serializer_class = UchotListSerializer
+#     pagination_class = PageSizeControl
+#
+#     def get_queryset(self):
+#         tashkilot_nomi = self.request.user.tashkilot
+#         uchot = Uchot.objects.filter(tashkilot_id=tashkilot_nomi)
+#         if uchot:
+#             return uchot

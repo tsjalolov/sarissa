@@ -4,10 +4,10 @@ from .views import *
 urlpatterns = [
     # path('',index),
     # path('',second_index),
-    path('ruyxatdanutgani/', Ruyxatdanutgani.as_view()),
     path('davlat/', DavlatListView.as_view()),  # manzil davlat  №1
     path('viloyat/', ViloyatListView.as_view()),   # manzil viloyat  №2
     path('tuman/', TumanListView.as_view()),  # manzil tuman №3
+    path('tumandavlat/', TumanDavlatBilanListView.as_view()),  # manzil tuman №3
     path('mahalla/', MahallaListView.as_view()),  # manzil mahalla №4
     path('kucha/', KuchaListView.as_view()),  # manzil kucha  №5
 

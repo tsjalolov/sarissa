@@ -109,34 +109,44 @@ class TumanListView(generics.ListCreateAPIView, generics.RetrieveDestroyAPIView)
         return Response({'message': 'dekter'})
 
 
-
- #tuman davlat idi bilan saralash
+# tuman davlat idi bilan saralash
 class TumanDavlatBilanListView(generics.ListAPIView):  # manzil tuman  №3
     queryset = Tuman.objects.all()
     serializer_class = TumanListSerializer
     permission_classes = (CustomDjangoModelPermissions,)
 
     def list(self, request, *args, **kwargs):
-        try:
-            int(request.query_params['viloyat_id'])
-            viloyat_id = int(request.query_params['viloyat_id'])
-            tumanlar = Tuman.objects.filter(viloyat_id=viloyat_id)
-            viloyatlar = Viloyat.objects.filter(id=viloyat_id)
+        davlat_id = int(request.query_params['davlat_id'])
+        viloyatlar = Viloyat.objects.filter(davlat=davlat_id)
+        davlat = Davlat.objects.filter(id=davlat_id)
+        # print(viloyatlar.values()[0]['id'])
 
-            if viloyat_id != 15 and viloyatlar:
-                if tumanlar:
-                    serializer = TumanListSerializer(tumanlar, many=True)
-                    return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
-            elif viloyat_id == 15:
-                '''boshqa viloyat id sidan chiqarish'''
-                tuman_boshqa = Tuman.objects.filter(viloyat_id=viloyat_id)
-                serializer = TumanListSerializer(tuman_boshqa, many=True)
-                return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
+        if davlat:
+            if davlat_id < 1:
+                massiv = []
+                for x in viloyatlar.values():
+                    massiv.append(x['id'])
+                t = Tuman.objects.filter(viloyat_id__in=massiv)
+                print(t)
+                serializer = TumanListSerializer(t, many=True)
+                return Response({'tumanlar': serializer.data}, status=status.HTTP_200_OK)
+
             else:
-                return Response({'message': "Viloyat id topilmadi"}, status=status.HTTP_404_NOT_FOUND)
-        except:
-            return Response({'message': 'Xato parametr kiritildi'}, status=status.HTTP_404_NOT_FOUND)
+                tuman = Tuman.objects.filter(id=255)
+                serializer = TumanListSerializer(tuman, many=True)
+                return Response({'tumanlar': serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({'data': 'xato davlat_id kiritildi'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+    # # print(Tuman.objects.filter(viloyat_id=viloyatlar.values()[0][]))
+    # tumanlar = Tuman.objects.filter(viloyat_id=viloyatlar)
+    # # print(tumanlar,   'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+    #
+    # serializer = TumanListSerializer(viloyatlar, many=True)
+    # print(serializer.data)
+    # return Response({'tuman': serializer.data}, status=status.HTTP_200_OK)
 
 
 class MahallaListView(generics.ListAPIView):  # manzil mahalla №4
@@ -230,8 +240,7 @@ class JinsListView(generics.ListAPIView):  # jins  №7
 
     # def list(self, request, *args, **kwargs):
     #     users = request.user
-        # print(users.tashkilot_id)
-
+    # print(users.tashkilot_id)
 
 
 """ Millat """
@@ -307,11 +316,10 @@ class FuqaroListView(generics.ListAPIView):  # fuqaro №10
 class FuqaroCreate(generics.CreateAPIView):
     queryset = Fuqaro.objects.all()
     serializer_class = FuqaroPostSerializer
-    permission_classes = (CustomDjangoModelPermissions, )
+    permission_classes = (CustomDjangoModelPermissions,)
 
     def perform_create(self, serializer):
         serializer.save(add_user=self.request.user)
-
 
 
 """ Usmir """
@@ -401,19 +409,3 @@ class MahallaOPListView(generics.ListAPIView):
 #         return HttpResponse('Hello')
 
 # 2686
-
-
-class Ruyxatdanutgani(generics.ListAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserListSerailizer
-    permission_classes = (CustomDjangoModelPermissions,)
-
-    def list(self, request, *args, **kwargs):
-        if self.request.user:
-            xodim = CustomUser.objects.filter(id=self.request.user.id)
-            serializer = CustomUserListSerailizer(xodim, many=True)
-            return Response({'xodim': serializer.data}, status=status.HTTP_200_OK)
-            # return Davlat.objects.all()
-        else:
-            pass
-
