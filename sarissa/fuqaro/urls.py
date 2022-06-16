@@ -19,6 +19,8 @@ urlpatterns = [
 
     path('fuqarolik_turi/', FuqarolikTuriListView.as_view()),  # fuqaro_tur №9
 
+    path('FuqaroAlohidaList/', FuqaroAlohidaListView.as_view()),  # fuqaro_tur №9
+
     path('fuqaro/', FuqaroListView.as_view()),  # fuqaro       # fuqaro №10
     path('fuqarocreate/', FuqaroCreate.as_view()),  # fuqaro       # fuqaro №10
 

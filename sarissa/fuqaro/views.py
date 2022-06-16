@@ -280,6 +280,26 @@ class FuqarolikTuriListView(generics.ListAPIView):  # fuqaro_tur №9
 
 """ Fuqarolar """
 
+'''fuqaro id kelsa o`sha fuqaroni chiqaradi'''
+class FuqaroAlohidaListView(generics.ListAPIView):  # fuqaro_tur №9
+    queryset = Fuqaro.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        try:
+            id = int(request.query_params['id'])
+        except ValueError:
+            return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
+        fuqaro = Fuqaro.objects.filter(id=id)
+
+        if fuqaro:
+            serializer_fuqaro = FuqaroAlohidaListSerializer(fuqaro, many=True)
+            return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({'fuqaro': 'Bu id  lik fuqaro yo`q'}, status=status.HTTP_200_OK)
+
+
+
 
 class FuqaroListView(generics.ListAPIView):  # fuqaro №10
     queryset = Fuqaro.objects.all()

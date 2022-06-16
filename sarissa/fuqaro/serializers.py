@@ -106,6 +106,26 @@ class BazaFuqaroSerializer(serializers.ModelSerializer):
         model = Baza_Fuqaro
         fields = '__all__'
 
+"""FuqaroAlohidaListView  uchun"""
+
+
+class FuqaroAlohidaListSerializer(serializers.ModelSerializer):  # manzil boshqa manzil  №6
+    jins = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    millat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    tug_joy_davlat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    tug_joy_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    pass_kim_bergan_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_viloyat = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_tuman = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_mahalla = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_kucha = serializers.SlugRelatedField(slug_field='name', read_only=True)
+
+
+    class Meta:
+        model = Fuqaro
+        fields = "__all__"
+
+
 
 """ Boshqa Manzil """
 
