@@ -304,15 +304,14 @@ class FuqaroListView(generics.ListAPIView):  # fuqaro №10
             return Response({'message': 'xato jshir'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class FuqaroCreate(generics.ListCreateAPIView):
+class FuqaroCreate(generics.CreateAPIView):
     queryset = Fuqaro.objects.all()
-    serializer_class = FuqaroListSerializer
+    serializer_class = FuqaroPostSerializer
     permission_classes = (CustomDjangoModelPermissions, )
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = FuqaroListSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(add_user=self.request.user)
+
 
 
 """ Usmir """

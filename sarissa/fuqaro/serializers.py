@@ -84,6 +84,14 @@ class FuqaroListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+'''hamma malumotni seryalizatsiya qilish uchun'''
+class FuqaroPostSerializer(serializers.ModelSerializer):
+    add_user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    class Meta:
+        model = Fuqaro
+        fields = '__all__'
+
+
 """ Fuqaro list Boshqa Manzil uchun  """
 
 
