@@ -37,3 +37,14 @@ class UchotListSerializer(serializers.ModelSerializer):
         if data.id == None:
             raise serializers.ValidationError('')
         return data
+
+
+class MahallaOPKuchaSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    def get_full_name(self, obj):
+        return '{} --> {}'.format(obj.mahalla_id, obj.name)
+
+    class Meta:
+        model = Kucha
+        fields = ['id', 'full_name', ]

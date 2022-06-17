@@ -39,7 +39,8 @@ class MahallaListSerializer(serializers.ModelSerializer):  # manzil tuman №4
 
 
 class KuchaListSerializer(serializers.ModelSerializer):  # manzil kucha  №5
-    mahalla_id = MahallaListSerializer()
+    # mahalla_id = MahallaListSerializer()
+    mahalla_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = Kucha
@@ -106,27 +107,6 @@ class BazaFuqaroSerializer(serializers.ModelSerializer):
         model = Baza_Fuqaro
         fields = '__all__'
 
-"""FuqaroAlohidaListView  uchun"""
-
-
-class FuqaroAlohidaListSerializer(serializers.ModelSerializer):  # manzil boshqa manzil  №6
-    jins = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    millat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    tug_joy_davlat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    tug_joy_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    pass_kim_bergan_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    doimiy_viloyat = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    doimiy_tuman = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    doimiy_mahalla = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    doimiy_kucha = serializers.SlugRelatedField(slug_field='name', read_only=True)
-
-
-    class Meta:
-        model = Fuqaro
-        fields = "__all__"
-
-
-
 """ Boshqa Manzil """
 
 
@@ -149,6 +129,27 @@ class FuqarolikTuriListSerializer(serializers.ModelSerializer):  # fuqaro_tur �
     class Meta:
         model = Fuqarolik_turi
         fields = "__all__"
+
+
+"""FuqaroAlohidaListView  uchun"""
+
+
+class FuqaroAlohidaListSerializer(serializers.ModelSerializer):  # manzil boshqa manzil  №6
+    jins = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    millat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    tug_joy_davlat_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    tug_joy_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    pass_kim_bergan_tuman_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_viloyat = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_tuman = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_mahalla = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    doimiy_kucha = serializers.SlugRelatedField(slug_field='name', read_only=True)
+
+
+    class Meta:
+        model = Fuqaro
+        fields = "__all__"
+
 
 
 """ Usmir """

@@ -1,3 +1,6 @@
+import datetime
+
+from dateutil.relativedelta import relativedelta
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
@@ -338,7 +341,7 @@ class Ruyxatdanutgani(generics.ListAPIView):
 '''o'ziga biriktirilgan mahallalarning ko'chalari chiqadi'''
 class MahallaOPListView(generics.ListAPIView):
     queryset = Kucha.objects.all()
-    serializer_class = KuchaListSerializer
+    serializer_class = MahallaOPKuchaSerializer
     pagination_class = PageSizeControl
 
     def list(self, request, *args, **kwargs):
@@ -349,7 +352,101 @@ class MahallaOPListView(generics.ListAPIView):
                 massiv.append(x['mahalla_id'])
             kucha = Kucha.objects.filter(mahalla_id__in=massiv)
             print(kucha)
-            serializer = KuchaListSerializer(kucha, many=True)
+            serializer = MahallaOPKuchaSerializer(kucha, many=True)
             return Response({'kuchalar': serializer.data}, status=status.HTTP_200_OK)
         else:
             pass
+
+
+
+''' yosh bo'yicha tashkilotning o'zi uchun filter'''
+class UchotAgeList(generics.ListAPIView):
+    serializer_class = UchotListSerializer
+    pagination_class = PageSizeControl
+    permission_classes = (CustomDjangoModelPermissions,)
+    queryset = Uchot.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        today = datetime.date.today()
+        yosh18 = today - relativedelta(years=15)
+        yosh1 = today - relativedelta(years=1)
+        yosh5 = today - relativedelta(years=5)
+        yosh14 = today - relativedelta(years=14)
+        yosh30 = today - relativedelta(years=30)
+        yosh60 = today - relativedelta(years=60)
+
+        ''' 18 yoshgacha '''
+        fuqaro18 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__gte=yosh18.year)).count()
+        usmir18 = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__gte=yosh18.year)).count()
+        chetel18 = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__gte=yosh18.year)).count()
+        jami18 = usmir18 + fuqaro18 + chetel18
+
+        ''' 1 yoshgacha '''
+        fuqaro1 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__gte=yosh1.year)).count()
+        usmir1 = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__gte=yosh1.year)).count()
+        chetel1 = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__gte=yosh1.year)).count()
+        jami1 = usmir1 + fuqaro1 + chetel1
+
+        ''' 5 yoshgacha '''
+        fuqaro5 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__gte=yosh5.year)).count()
+        usmir5 = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__gte=yosh5.year)).count()
+        chetel5 = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__gte=yosh5.year)).count()
+        jami5 = usmir5 + fuqaro5 + chetel5
+
+        ''' 14 yoshgacha '''
+        fuqaro14 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__gte=yosh14.year)).count()
+        usmir14 = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__gte=yosh14.year)).count()
+        chetel14 = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__gte=yosh14.year)).count()
+        jami14 = usmir14 + fuqaro14 + chetel14
+
+        ''' 14 dan 30 yoshgacha '''
+        fuqaro14_30 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__lte=yosh14.year) & Q(fuqaro__tug_sana__year__gte=yosh30.year)).count()
+        usmir14_30 = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__lte=yosh14.year) & Q(usmir__tug_sana__year__gte=yosh30.year)).count()
+        chetel14_30 = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__lte=yosh14.year) & Q(chetel_fuqaro__tug_sana__year__gte=yosh30.year)).count()
+        jami14_30 = usmir14_30 + fuqaro14_30 + chetel14_30
+        ''' 60 yoshgacha '''
+        fuqaro60 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__gte=yosh60.year)).count()
+        usmir60 = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__gte=yosh60.year)).count()
+        chetel60 = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__gte=yosh60.year)).count()
+        jami60 = usmir60 + fuqaro60 + chetel60
+
+        ''' 60 yoshdan yuqori '''
+        fuqaro60_ = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            fuqaro__tug_sana__year__lt=yosh60.year)).count()
+        usmir60_ = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            usmir__tug_sana__year__lt=yosh60.year)).count()
+        chetel60_ = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+            chetel_fuqaro__tug_sana__year__lt=yosh60.year)).count()
+        jami60_ = usmir60_ + fuqaro60_ + chetel60_
+
+        ''' Jami uchotdagilar soni '''
+        jami = Uchot.objects.filter(tashkilot_id=self.request.user.tashkilot).count()
+
+        return Response({'yosh': {
+            '1_yoshgacha': jami1,
+            '5_yoshgacha': jami5,
+            '14_yoshgacha': jami14,
+            '18_yoshgacha': jami18,
+            '14_30_yoshgacha': jami14_30,
+            '60_yoshgacha': jami60,
+            '60_yoshdan_yuqori': jami60_,
+            'Jami': jami,
+        }}, status=status.HTTP_200_OK)
