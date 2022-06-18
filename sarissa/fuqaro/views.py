@@ -436,16 +436,6 @@ class MahallaOPListView(generics.ListAPIView, generics.DestroyAPIView):
         serializer = MahallaOPListSerializer(mahallalar, many=True)
         return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
 
-    def __del__(self):
-        instance = self.get_object()
-        print(instance, 'zzzzzzzzzzzzzzzzzzz')
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        print(instance , 'wwwwwwwwwwwwwwww')
-        if instance.is_default == True:
-            return Response("Cannot delete default system category", status=status.HTTP_400_BAD_REQUEST)
-        self.perform_destroy(instance)
 
 class MahallaOPDeletePost(generics.DestroyAPIView):
     serializer_class = MahallaOPListSerializer
