@@ -45,7 +45,7 @@ class DavlatListView(generics.ListAPIView):  # manzil davlat  №1
 class ViloyatListView(generics.ListAPIView):  # manzil viloyat  №2
     permission_classes = (CustomDjangoModelPermissions,)
     serializer_class = ViloyatListSerializer
-    queryset = Viloyat.objects.all()
+    queryset = Viloyat.objects.select_related('davlat')
 
     def list(self, request, *args, **kwargs):
         try:
@@ -428,7 +428,8 @@ class MahallaOpPsotListView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(tashkilot_id=self.request.user.tashkilot_id)
 
-class MahallaOPListView(generics.ListAPIView, generics.DestroyAPIView):
+'''#  o'ziga biriktirilgan mahallalar ro'yxati '''
+class MahallaOPListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         tashkilot = self.request.user.tashkilot_id
@@ -436,8 +437,8 @@ class MahallaOPListView(generics.ListAPIView, generics.DestroyAPIView):
         serializer = MahallaOPListSerializer(mahallalar, many=True)
         return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
 
-
+''' op ga mahalla qo'shilganlarni o'chirish '''
 class MahallaOPDeletePost(generics.DestroyAPIView):
     serializer_class = MahallaOPListSerializer
     queryset = Mahalla_op.objects.all()
-
+    permission_classes = (CustomDjangoModelPermissions,)

@@ -18,6 +18,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenObtainPairView
 
 urlpatterns = [
+    path('__debug__/', include('debug_toolbar.urls')),
     path('admin/', admin.site.urls),
     # path('',include('fuqaro.urls')),
 
