@@ -374,6 +374,38 @@ class UchotAgeList(generics.ListAPIView):
         yosh14 = today - relativedelta(years=14)
         yosh30 = today - relativedelta(years=30)
         yosh60 = today - relativedelta(years=60)
+        """
+        yoshlar = [yosh1, yosh5, yosh14, yosh18, yosh30, yosh60]
+        jami_massiv = []
+        i=0
+        for yosh in yoshlar:
+            fuqaro = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+                fuqaro__tug_sana__year__gte=yosh.year)).count()
+            usmir = Uchot.objects.filter(Q(fuqaro_turi_id=2) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+                usmir__tug_sana__year__gte=yosh.year)).count()
+            chetel = Uchot.objects.filter(Q(fuqaro_turi_id=3) & Q(tashkilot_id=self.request.user.tashkilot) & Q(
+                chetel_fuqaro__tug_sana__year__gte=yosh.year)).count()
+            jami = usmir + fuqaro + chetel
+            jami_massiv.append(jami)
+            i=i+1
+        print(jami_massiv[0], 'dddddddddd')
+
+        ''' Jami uchotdagilar soni '''
+        jami = Uchot.objects.filter(tashkilot_id=self.request.user.tashkilot).count()
+
+        return Response({'yosh': {
+            '1_yoshgacha': jami_massiv[0],
+            '5_yoshgacha': jami_massiv[1],
+            '14_yoshgacha': jami_massiv[2],
+            '18_yoshgacha': jami_massiv[3],
+            '30_yoshgacha': jami_massiv[4],
+            '60_yoshgacha': jami_massiv[5],
+            # '60_yoshdan_yuqori': jami_massiv[6],
+            'Jami': jami,
+        }}, status=status.HTTP_200_OK)
+
+
+"""
 
         ''' 18 yoshgacha '''
         fuqaro18 = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=self.request.user.tashkilot) & Q(

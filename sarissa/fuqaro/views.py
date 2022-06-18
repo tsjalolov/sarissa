@@ -409,23 +409,45 @@ class TashkilotTelListView(generics.ListAPIView):
     queryset = Tashkilot_Tel.objects.all()
     serializer_class = TashkilotTelListSerializer
 
+''' op ga mahalla qo'shish uchun o'zinng tumanining mahallalarini chiqarish '''
+class MahallaOpTumanListView(generics.ListAPIView):
 
-class MahallaOPListView(generics.ListAPIView):
+    def list(self, request, *args, **kwargs):
+        tashkilot = Tashkilot.objects.get(id=self.request.user.tashkilot_id)
+        tuman_id = tashkilot.tuman_id_id
+        mahallalar = Mahalla.objects.filter(tuman_id=tuman_id)
+        serializer = MahallaListSerializer(mahallalar, many=True)
+        return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
+
+''' op ga mahalla qo'shish '''
+class MahallaOpPsotListView(generics.CreateAPIView):
     queryset = Mahalla_op.objects.all()
+    serializer_class = MahallaOPPostSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def perform_create(self, serializer):
+        serializer.save(tashkilot_id=self.request.user.tashkilot_id)
+
+class MahallaOPListView(generics.ListAPIView, generics.DestroyAPIView):
+
+    def list(self, request, *args, **kwargs):
+        tashkilot = self.request.user.tashkilot_id
+        mahallalar = Mahalla_op.objects.filter(tashkilot_id=tashkilot)
+        serializer = MahallaOPListSerializer(mahallalar, many=True)
+        return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
+
+    def __del__(self):
+        instance = self.get_object()
+        print(instance, 'zzzzzzzzzzzzzzzzzzz')
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        print(instance , 'wwwwwwwwwwwwwwww')
+        if instance.is_default == True:
+            return Response("Cannot delete default system category", status=status.HTTP_400_BAD_REQUEST)
+        self.perform_destroy(instance)
+
+class MahallaOPDeletePost(generics.DestroyAPIView):
     serializer_class = MahallaOPListSerializer
-    pagination_class = PageSizeControl
+    queryset = Mahalla_op.objects.all()
 
-# class tugsana(APIView):
-#     def get(self, request):
-#         # datetime taxlash
-#         number = ChetElFuqarosi.objects.all().values('qushilgan_sana')
-#         for son in number:
-#             try:
-#                 a = ChetElFuqarosi.objects.filter(qushilgan_sana=son['qushilgan_sana']).update(
-#                     qushilgan_sana_2=datetime.datetime.fromtimestamp(son['qushilgan_sana'] / 1000))
-#             except ValueError:
-#                 print(a)
-#                 pass
-#         return HttpResponse('Hello')
-
-# 2686

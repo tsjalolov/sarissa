@@ -241,12 +241,19 @@ class TashkilotTelListSerializer(serializers.ModelSerializer):
 
 
 class MahallaOPListSerializer(serializers.ModelSerializer):
-    tashkilot = TashkilotListSerializer()
+    # tashkilot = TashkilotListSerializer()
     mahalla = MahallaListSerializer()
 
     class Meta:
         model = Mahalla_op
-        fields = "__all__"
+        fields = ['id', 'mahalla',]
+
+
+class MahallaOPPostSerializer(serializers.ModelSerializer):
+    # tashkilot = TashkilotListSerializer()
+    class Meta:
+        model = Mahalla_op
+        fields = ['mahalla',]
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
