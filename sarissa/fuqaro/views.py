@@ -282,7 +282,7 @@ class FuqarolikTuriListView(generics.ListAPIView):  # fuqaro_tur №9
 
 '''fuqaro id kelsa o`sha fuqaroni chiqaradi'''
 class FuqaroAlohidaListView(generics.ListAPIView):  # fuqaro_tur №9
-    queryset = Fuqaro.objects.all()
+    queryset = Fuqaro.objects.select_related('doimiy_kucha','doimiy_tuman','doimiy_viloyat','jins','millat_id','fuqaro_tuman','tug_joy_davlat_id')
 
     def list(self, request, *args, **kwargs):
         try:
@@ -415,7 +415,12 @@ class MahallaOpTumanListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         tashkilot = Tashkilot.objects.get(id=self.request.user.tashkilot_id)
         tuman_id = tashkilot.tuman_id_id
-        mahallalar = Mahalla.objects.filter(tuman_id=tuman_id)
+        mahalla = Mahalla_op.objects.filter(tashkilot=self.request.user.tashkilot_id)
+        massiv = []
+        for x in mahalla.values():
+            massiv.append(x['mahalla_id'])
+
+        mahallalar = Mahalla.objects.filter(Q(tuman_id=tuman_id)&~Q(id__in = (massiv)))
         serializer = MahallaListSerializer(mahallalar, many=True)
         return Response({'mahalla': serializer.data}, status=status.HTTP_200_OK)
 

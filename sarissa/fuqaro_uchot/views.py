@@ -292,11 +292,13 @@ class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
         users = request.user
         if request.query_params and request.query_params['fuqaro_turi']:
             try:
+
                 tur_id = int(request.query_params['fuqaro_turi'])
             except ValueError:
                 return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 if tur_id == 1:
+                    print('t-------------------------------------------------------------------------t')
                     return self.uchot_tash_func(1, users.tashkilot_id)
                 elif tur_id == 2:
                     return self.uchot_tash_func(2, users.tashkilot_id)
@@ -482,3 +484,31 @@ class UchotAgeList(generics.ListAPIView):
             '60_yoshdan_yuqori': jami60_,
             'Jami': jami,
         }}, status=status.HTTP_200_OK)
+
+
+class Ssinov(generics.ListAPIView):
+    serializer_class = SinovUchotListSerializer
+    pagination_class = PageSizeControl
+    permission_classes = (CustomDjangoModelPermissions,)
+    queryset = Uchot.objects.all()
+
+    # def list(self, request, *args, **kwargs):
+    #     try:
+    #         tur_id = int(request.query_params['fuqaro_turi'])
+    #     except ValueError:
+    #         return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
+    #     users = request.user
+    #
+    #     uchot = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=users.tashkilot_id))
+    #     # print(uchot.objects.values_list('fuqaro'))
+    #     if tur_id == 1:
+    #         fuqarolar = Fuqaro.objects.filter(id__in=uchot)
+    #         serializer_fuqaro = FuqaroAlohidaListSerializer(fuqarolar, many=True)
+    #         return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
+# 2014124
+
+# mahalla = Mahalla_op.objects.filter(tashkilot=self.request.user.tashkilot)
+#             massiv = []
+#             for x in mahalla.values():
+#                 massiv.append(x['mahalla_id'])
+#             kucha = Kucha.objects.filter(mahalla_id__in=massiv)

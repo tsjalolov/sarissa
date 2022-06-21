@@ -460,8 +460,8 @@ class Mahalla_op(models.Model):
     tashkilot = models.ForeignKey(Tashkilot, verbose_name="Tashkiloti", on_delete=models.PROTECT)
     mahalla = models.ForeignKey(Mahalla, verbose_name="Biriktirilgan maxallalar",  on_delete=models.PROTECT)
 
-    def __str__(self):
-        return self.tashkilot
+    # def __str__(self):
+    #     return self.tashkilot
 
     class Meta:
         ordering = ['tashkilot']

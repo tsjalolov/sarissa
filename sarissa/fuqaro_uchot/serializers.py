@@ -11,13 +11,13 @@ class UchotTuriListSerializer(serializers.ModelSerializer):
 
 
 class UchotListSerializer(serializers.ModelSerializer):
-    # fuqaro = FuqaroSerializer()
-    # usmir = UsmirSerializer()
+    fuqaro = FuqaroSerializer()
+    usmir = UsmirSerializer()
 
     # creat
     # tashkilot_id = serializers.SlugRelatedField(slug_field='nomi', read_only=True)
-    # kucha_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    # uchot_turi_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    kucha_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    uchot_turi_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
     # add_user_id = serializers.SlugRelatedField(slug_field='username', read_only=True)
     class Meta:
         model = Uchot
@@ -48,3 +48,18 @@ class MahallaOPKuchaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kucha
         fields = ['id', 'full_name', ]
+
+
+class SinovUchotListSerializer(serializers.ModelSerializer):
+    fuqaro = FuqaroSerializer()
+    usmir = UsmirSerializer()
+    chetel_fuqaro =ChetElFuqarosiListSerializer()
+
+
+
+    kucha_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    uchot_turi_id = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    # add_user_id = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    class Meta:
+        model = Uchot
+        exclude = ('add_user_id', 'tashkilot_id')
