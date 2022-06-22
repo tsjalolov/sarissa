@@ -396,6 +396,7 @@ class UsmirAlohidaListView(generics.ListAPIView):  # fuqaro_tur №11
             return Response({'fuqaro': 'Bu id  lik usmir yo`q'}, status=status.HTTP_200_OK)
 
 class UsmirCreate(generics.CreateAPIView):
+
     queryset = Usmir.objects.all()
     serializer_class = UsmirPostSerializer
     permission_classes = (CustomDjangoModelPermissions,)
