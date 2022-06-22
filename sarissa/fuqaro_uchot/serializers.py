@@ -51,9 +51,10 @@ class MahallaOPKuchaSerializer(serializers.ModelSerializer):
 
 
 class SinovUchotListSerializer(serializers.ModelSerializer):
-    fuqaro = FuqaroSerializer()
-    usmir = UsmirSerializer()
-    chetel_fuqaro =ChetElFuqarosiListSerializer()
+    if UsmirSerializer():
+        fuqaro = FuqaroSerializer()
+    # usmir = UsmirSerializer()
+    # chetel_fuqaro =ChetElFuqarosiListSerializer()
 
 
 

@@ -374,6 +374,38 @@ class UsmirListView(generics.ListAPIView):  # usmir   №11
             return Response({'messenger': 'xato parametr'}, status=status.HTTP_404_NOT_FOUND)
 
 
+
+
+'''usmir id kelsa o`sha usmirni chiqaradi'''
+class UsmirAlohidaListView(generics.ListAPIView):  # fuqaro_tur №11
+    queryset = Usmir.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        try:
+            id = int(request.query_params['id'])
+        except ValueError:
+            return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
+        usmir = Usmir.objects.filter(id=id)
+
+        if usmir:
+            print(usmir)
+            serializer = UsmirIDListSerializer(usmir, many=True)
+            return Response({'usmir': serializer.data}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({'fuqaro': 'Bu id  lik usmir yo`q'}, status=status.HTTP_200_OK)
+
+class UsmirCreate(generics.CreateAPIView):
+    queryset = Usmir.objects.all()
+    serializer_class = UsmirPostSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def perform_create(self, serializer):
+        serializer.save(add_user=self.request.user)
+
+
+
+
 """ mkb10 """
 
 

@@ -186,6 +186,24 @@ class UsmirListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UsmirIDListSerializer(serializers.ModelSerializer):
+    jins = JinsListSerializer()
+    millat_id = MillatListSerializer()
+    tug_joy_davlat_id = DavlatListSerializer()
+    tug_joy_tuman_id = TumanListSerializer()
+    guvohnoma_kim_bergan_tuman_id = TumanListSerializer()
+
+    class Meta:
+        model = Usmir
+        fields = '__all__'
+
+'''hamma malumotni seryalizatsiya qilish uchun'''
+class UsmirPostSerializer(serializers.ModelSerializer):
+    add_user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    class Meta:
+        model = Usmir
+        fields = '__all__'
+
 """ ChetEL Fuqarosi """
 
 

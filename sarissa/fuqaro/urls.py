@@ -26,6 +26,8 @@ urlpatterns = [
 
 
     path('usmir/', UsmirListView.as_view()),  # usmir            # usmir   №11
+    path('usmirAlohida/', UsmirAlohidaListView.as_view()),  # usmir            # usmir   №11
+    path('usmircreate/', UsmirCreate.as_view()),  # usmir            # usmir   №11
 
     # path('chet_el_fuqaro/', ChetElFuqarosiListView.as_view()),  # ChetEl_Fuqaro
 

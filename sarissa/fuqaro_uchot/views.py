@@ -497,14 +497,24 @@ class Ssinov(generics.ListAPIView):
     #         tur_id = int(request.query_params['fuqaro_turi'])
     #     except ValueError:
     #         return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
-    #     users = request.user
-    #
-    #     uchot = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=users.tashkilot_id))
-    #     # print(uchot.objects.values_list('fuqaro'))
-    #     if tur_id == 1:
-    #         fuqarolar = Fuqaro.objects.filter(id__in=uchot)
-    #         serializer_fuqaro = FuqaroAlohidaListSerializer(fuqarolar, many=True)
+    #     else:
+    #         users = request.user
+    #         qqq = Uchot.objects.all()
+    #         uchot = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=users.tashkilot_id))
+    #         serializer_fuqaro = SinovUchotListSerializer(qqq, many=True)
     #         return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
+
+
+            # print(uchot.objects.values_list('fuqaro'))
+            # if tur_id == 1:
+            #     # fuqarolar = Fuqaro.objects.filter(id__in=454)
+            #     serializer_fuqaro = SinovUchotListSerializer(uchot, many=True)
+            #     return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
+
+
+    #
+    #     # print(uchot.objects.values_list('fuqaro'))
+    #
 # 2014124
 
 # mahalla = Mahalla_op.objects.filter(tashkilot=self.request.user.tashkilot)
