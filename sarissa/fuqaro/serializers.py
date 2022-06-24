@@ -212,6 +212,27 @@ class ChetElFuqarosiListSerializer(serializers.ModelSerializer):
         model = ChetElFuqarosi
         fields = '__all__'
 
+'''hamma malumotni seryalizatsiya qilish uchun'''
+class ChetElPostSerializer(serializers.ModelSerializer):
+    add_user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+
+    class Meta:
+        model = ChetElFuqarosi
+        fields = '__all__'
+
+
+'''chet el'''
+class ChetElIDListSerializer(serializers.ModelSerializer):
+    jins = JinsListSerializer()
+    fuqaroligi = DavlatListSerializer()
+    vaqtinchalik_viloyat = ViloyatListSerializer()
+    vaqtinchalik_tuman = TumanListSerializer()
+    vaqtinchalik_mahalla = MahallaListSerializer()
+    vaqtinchalik_kucha = KuchaListSerializer()
+
+    class Meta:
+        model = ChetElFuqarosi
+        fields = '__all__'
 
 """ mkb10 """
 

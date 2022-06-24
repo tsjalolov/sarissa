@@ -18,6 +18,7 @@ class UchotTuriListView(generics.ListAPIView):
     queryset = UchotTuri.objects.all()
     serializer_class = UchotTuriListSerializer
 
+
 '''
 class UchotListView(APIView):
 
@@ -103,9 +104,8 @@ class UchotTekshirishGet(APIView):
                 else:
                     fuqaro = Fuqaro.objects.filter(id=human_id)
                     if fuqaro:
-                        return Response({'status': 6,'status_message': 'uchotga olish mumkin'},
+                        return Response({'status': 6, 'status_message': 'uchotga olish mumkin'},
                                         status=status.HTTP_200_OK)
-
 
                 return Response({'message': 'fuqaro id yoq'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -129,6 +129,7 @@ class UchotTekshirishGet(APIView):
                 return Response({'message': 'chetel id yoq'}, status=status.HTTP_404_NOT_FOUND)
 
             return Response({'fuqaro': 'yoq'})
+
 
 '''
  # uchotga olish  
@@ -180,6 +181,7 @@ class UchotAddApiView(APIView):
     "kucha_id": 52,
     "uchot_turi_id":3
 } yuqoridagi json keladi uchotga olish tashklilot va user id o'zi oladi'   '''
+
 
 class UchotApiView(generics.CreateAPIView):
     # def post_func(self, human_id, fuqaro_turi_id):
@@ -260,8 +262,6 @@ class UchotApiView(generics.CreateAPIView):
                 return Response({'message': 'error 222'})
 
 
-
-
 '''{
     "fuqaro": 32010,
     "usmir": null,
@@ -273,15 +273,18 @@ class UchotApiView(generics.CreateAPIView):
 
 
 #    fuqaro_turi yuborilganda shu tashkilotning o'ziga tegishli fuqarolar ro'yxati chiqadi
-class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
+class UchotTashkilotApiView1(generics.ListAPIView):
     queryset = Uchot.objects.all()
     serializer_class = UchotListSerializer
+
     permission_classes = [DjangoModelPermissions, ]
     pagination_class = PageSizeControl
 
-    #
+
+
+
     def uchot_tash_func(self, fuqaro_turi_id, tashkil_turi):
-        uchot = Uchot.objects.filter(Q(fuqaro_turi_id=fuqaro_turi_id) & Q(tashkilot_id=tashkil_turi))
+        uchot = Uchot.objects.select_related('fuqaro','usmir','kucha_id','uchot_turi_id').filter(Q(fuqaro_turi_id=fuqaro_turi_id) & Q(tashkilot_id=tashkil_turi))
         uchut_q = self.paginate_queryset(uchot)
         uchot_serializer = UchotListSerializer(uchut_q, many=True)
 
@@ -318,7 +321,6 @@ class UchotTashkilotApiView(generics.CreateAPIView, generics.ListAPIView):
             }, status=status.HTTP_200_OK)
 
 
-
 class Ruyxatdanutgani(generics.ListAPIView):
     queryset = Uchot.objects.all()
     serializer_class = UchotListSerializer
@@ -341,6 +343,8 @@ class Ruyxatdanutgani(generics.ListAPIView):
 
 
 '''o'ziga biriktirilgan mahallalarning ko'chalari chiqadi'''
+
+
 class MahallaOPListView(generics.ListAPIView):
     queryset = Kucha.objects.all()
     serializer_class = MahallaOPKuchaSerializer
@@ -360,8 +364,9 @@ class MahallaOPListView(generics.ListAPIView):
             pass
 
 
-
 ''' yosh bo'yicha tashkilotning o'zi uchun filter'''
+
+
 class UchotAgeList(generics.ListAPIView):
     serializer_class = UchotListSerializer
     pagination_class = PageSizeControl
@@ -504,13 +509,11 @@ class Ssinov(generics.ListAPIView):
     #         serializer_fuqaro = SinovUchotListSerializer(qqq, many=True)
     #         return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
 
-
-            # print(uchot.objects.values_list('fuqaro'))
-            # if tur_id == 1:
-            #     # fuqarolar = Fuqaro.objects.filter(id__in=454)
-            #     serializer_fuqaro = SinovUchotListSerializer(uchot, many=True)
-            #     return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
-
+    # print(uchot.objects.values_list('fuqaro'))
+    # if tur_id == 1:
+    #     # fuqarolar = Fuqaro.objects.filter(id__in=454)
+    #     serializer_fuqaro = SinovUchotListSerializer(uchot, many=True)
+    #     return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
 
     #
     #     # print(uchot.objects.values_list('fuqaro'))

@@ -305,6 +305,7 @@ class FuqaroListView(generics.ListAPIView):  # fuqaro №10
     queryset = Fuqaro.objects.all()
     serializer_class = FuqaroListSerializer
     permission_classes = (CustomDjangoModelPermissions,)
+    pagination_class = PageSizeControl
 
     def list(self, request, *args, **kwargs):
 
@@ -358,7 +359,7 @@ class UsmirListView(generics.ListAPIView):  # usmir   №11
             baza_usmir = BazaUsmir.objects.filter(
                 Q(guvohnoma_seriyasi=guvohnoma_seriya) & Q(guvohnoma_raqami=guvohnoma_raqam))
             if usmir:
-                serializer_usmir = UsmirSerializer(usmir, many=True)
+                serializer_usmir = UsmirPostSerializer(usmir, many=True)
                 return Response({'baza_status': 7, 'fuqaro_turi': 2, 'messenger': serializer_usmir.data},
                                 status=HTTP_200_OK)
             elif baza_usmir:
@@ -378,14 +379,14 @@ class UsmirListView(generics.ListAPIView):  # usmir   №11
 
 '''usmir id kelsa o`sha usmirni chiqaradi'''
 class UsmirAlohidaListView(generics.ListAPIView):  # fuqaro_tur №11
-    queryset = Usmir.objects.all()
+    # queryset = Usmir.objects.all()
 
     def list(self, request, *args, **kwargs):
         try:
             id = int(request.query_params['id'])
         except ValueError:
             return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
-        usmir = Usmir.objects.filter(id=id)
+        usmir = Usmir.objects.select_related('millat_id','tug_joy_davlat_id','tug_joy_tuman_id','guvohnoma_kim_bergan_tuman_id','jins',).filter(id=id)
 
         if usmir:
             print(usmir)
@@ -399,6 +400,58 @@ class UsmirCreate(generics.CreateAPIView):
 
     queryset = Usmir.objects.all()
     serializer_class = UsmirPostSerializer
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def perform_create(self, serializer):
+        serializer.save(add_user=self.request.user)
+
+
+'''Chet el '''
+'''Chet el seriya_raqam kelsa bazadan qidiradi  '''
+class ChetElListView(generics.ListAPIView):  # usmir   №11
+    # queryset = Usmir.objects.all()
+    # serializer_class = UsmirListSerializer
+    # permission_classes = (CustomDjangoModelPermissions,)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            hujjatning_seriyasi_raqami = request.query_params['seriya_raqam']
+        except ValueError:
+            return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
+        chetle = ChetElFuqarosi.objects.filter(hujjatning_seriyasi_raqami=hujjatning_seriyasi_raqami)
+
+
+        if chetle:
+            serializer = ChetElPostSerializer(chetle, many=True)
+            return Response({'baza_status': 7, 'fuqaro_turi': 2, 'messenger': serializer.data},
+                            status=HTTP_200_OK)
+        else:
+            return Response({'baza_status': 1, 'hujjatning_seriyasi_raqami': hujjatning_seriyasi_raqami, },
+                            status=HTTP_200_OK)
+
+
+'''Chet el id kelsa o`sha Chet el ni chiqaradi'''
+class ChetElAlohidaListView(generics.ListAPIView):  # fuqaro_tur №11
+
+    def list(self, request, *args, **kwargs):
+        try:
+            id = int(request.query_params['id'])
+        except ValueError:
+            return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
+        chetel = ChetElFuqarosi.objects.select_related('vaqtinchalik_viloyat','fuqaroligi','vaqtinchalik_tuman','vaqtinchalik_mahalla','vaqtinchalik_kucha',).filter(id=id)
+
+        if chetel:
+            print(chetel)
+            serializer = ChetElIDListSerializer(chetel, many=True)
+            return Response({'chet_el': serializer.data}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({'fuqaro': 'Bu id  lik Chet el fuqarosi yo`q'}, status=status.HTTP_200_OK)
+
+class ChetElCreate(generics.CreateAPIView):
+
+    queryset = ChetElFuqarosi.objects.all()
+    serializer_class = ChetElPostSerializer
     permission_classes = (CustomDjangoModelPermissions,)
 
     def perform_create(self, serializer):

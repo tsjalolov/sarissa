@@ -19,15 +19,19 @@ urlpatterns = [
 
     path('fuqarolik_turi/', FuqarolikTuriListView.as_view()),  # fuqaro_tur №9
 
-    path('FuqaroAlohidaList/', FuqaroAlohidaListView.as_view()),  # fuqaro_tur №9
 
     path('fuqaro/', FuqaroListView.as_view()),  # fuqaro       # fuqaro №10
+    path('FuqaroAlohidaList/', FuqaroAlohidaListView.as_view()),  # fuqaro_tur №9
     path('fuqarocreate/', FuqaroCreate.as_view()),  # fuqaro       # fuqaro №10
 
 
     path('usmir/', UsmirListView.as_view()),  # usmir            # usmir   №11
     path('usmirAlohida/', UsmirAlohidaListView.as_view()),  # usmir            # usmir   №11
     path('usmircreate/', UsmirCreate.as_view()),  # usmir            # usmir   №11
+
+    path('chetel/', ChetElListView.as_view()),
+    path('chetelAlohida/', ChetElAlohidaListView.as_view()),
+    path('ChetElCreate/', ChetElCreate.as_view()),
 
     # path('chet_el_fuqaro/', ChetElFuqarosiListView.as_view()),  # ChetEl_Fuqaro
 
