@@ -127,7 +127,7 @@ class TumanDavlatBilanListView(generics.ListAPIView):  # manzil tuman  №3
                 for x in viloyatlar.values():
                     massiv.append(x['id'])
                 t = Tuman.objects.filter(viloyat_id__in=massiv)
-                print(t)
+                # print(t)
                 serializer = TumanListSerializer(t, many=True)
                 return Response({'tumanlar': serializer.data}, status=status.HTTP_200_OK)
 
@@ -448,6 +448,7 @@ class ChetElAlohidaListView(generics.ListAPIView):  # fuqaro_tur №11
         else:
             return Response({'fuqaro': 'Bu id  lik Chet el fuqarosi yo`q'}, status=status.HTTP_200_OK)
 
+'''chet el fuqaro qo'shish'''
 class ChetElCreate(generics.CreateAPIView):
 
     queryset = ChetElFuqarosi.objects.all()

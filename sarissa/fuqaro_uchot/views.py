@@ -490,38 +490,68 @@ class UchotAgeList(generics.ListAPIView):
             'Jami': jami,
         }}, status=status.HTTP_200_OK)
 
+import json
+'''buxoro viloyati tumanlari bo'yicha uchotga olinganlar soni'''
+class UchotTumanBuyichaList(generics.ListAPIView):
 
-class Ssinov(generics.ListAPIView):
-    serializer_class = SinovUchotListSerializer
-    pagination_class = PageSizeControl
-    permission_classes = (CustomDjangoModelPermissions,)
-    queryset = Uchot.objects.all()
+    def list(self, request, *args, **kwargs):
+        tumanlar = Tuman.objects.filter(viloyat_id=4)
 
-    # def list(self, request, *args, **kwargs):
-    #     try:
-    #         tur_id = int(request.query_params['fuqaro_turi'])
-    #     except ValueError:
-    #         return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
-    #     else:
-    #         users = request.user
-    #         qqq = Uchot.objects.all()
-    #         uchot = Uchot.objects.filter(Q(fuqaro_turi_id=1) & Q(tashkilot_id=users.tashkilot_id))
-    #         serializer_fuqaro = SinovUchotListSerializer(qqq, many=True)
-    #         return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
+        """tashkilotlarni tuman bo'yicha filterlash"""
+        massiv_tashkilotlar = []
+        massiv_uchot_soni = []
+        tuman_name = []
+        tuman_id = []
+        for tuman in tumanlar.values():
+            tashkilotlar = Tashkilot.objects.filter(tuman_id=tuman['id'])   #  tumanga tegishli tashkilotlar
+            uchot_soni = Uchot.objects.filter(tashkilot_id__in=tashkilotlar).count()  #tuman bo'yicha uchotga olinganlar soni
+            massiv_tashkilotlar.append(tashkilotlar)
+            massiv_uchot_soni.append(uchot_soni)
+            tuman_name.append('name'+' : '+tuman['name'])
 
-    # print(uchot.objects.values_list('fuqaro'))
-    # if tur_id == 1:
-    #     # fuqarolar = Fuqaro.objects.filter(id__in=454)
-    #     serializer_fuqaro = SinovUchotListSerializer(uchot, many=True)
-    #     return Response({'fuqaro': serializer_fuqaro.data}, status=status.HTTP_200_OK)
+            tuman_id.append(tuman['id'])
+        print(tuman_name)
+        return Response({tuman_name[0]}, status=status.HTTP_200_OK)
 
-    #
-    #     # print(uchot.objects.values_list('fuqaro'))
-    #
-# 2014124
+    """
+    {
+    'tuman_id': 2,
+    'tuman_name': 'Olot',
+    'uchot_soni': 34
+    }
+    {
+    'tuman_id': 2,
+    'tuman_name': 'Olot',
+    'uchot_soni': 34
+    }
+    {
+    'tuman_id': 2,
+    'tuman_name': 'Olot',
+    'uchot_soni': 34
+    }
+    """
 
-# mahalla = Mahalla_op.objects.filter(tashkilot=self.request.user.tashkilot)
-#             massiv = []
-#             for x in mahalla.values():
-#                 massiv.append(x['mahalla_id'])
-#             kucha = Kucha.objects.filter(mahalla_id__in=massiv)
+class UchotTashkilotBuyichaList(generics.ListAPIView):
+
+    def list(self, request, *args, **kwargs):
+
+        try:
+            tuman_id = int(request.query_params['tuman_id'])
+
+        except ValueError:
+            return Response({'message': 'tuman id xato kiritildi'}, status=status.HTTP_400_BAD_REQUEST)
+
+        tashkilotlar = Tashkilot.objects.filter(tuman_id=tuman_id)
+
+
+        massiv_uchot_soni = []
+        tashkilot_name = []
+        tashkilot_id = []
+        for tashkilot in tashkilotlar:
+            trr = Tashkilot.objects.filter(tuman_id=tuman_id)
+            uchot_soni = Uchot.objects.filter(tashkilot_id__in=trr).count()  #tashkilot bo'yicha uchotga olinganlar soni
+            massiv_uchot_soni.append(uchot_soni)
+            # tashkilot_name.append('name'+' : '+tashkilot['name'])
+            # tashkilot_id.append(tashkilot['id'])
+
+        return Response({'tashkilot_name[0]':1}, status=status.HTTP_200_OK)

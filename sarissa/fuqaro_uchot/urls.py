@@ -15,6 +15,8 @@ urlpatterns = [
     # path('one/',one),
     # path('fuqaro_search/', FuqaroUchotSearch.as_view()),
     path('uchototchot/', Ruyxatdanutgani.as_view()),
-    path('sinov/', Ssinov.as_view()),
+    path('uchottuman/', UchotTumanBuyichaList.as_view()),
+    path('uchottashkilot/', UchotTashkilotBuyichaList.as_view()),
+
 
 ]
