@@ -1,4 +1,6 @@
 import datetime
+from builtins import next
+
 import django_filters
 from django.db.models import Count
 from django.http.response import HttpResponse

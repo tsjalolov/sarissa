@@ -42,7 +42,7 @@ urlpatterns = [
     path('tashkilot_qushimcha_malumot/', TashkilotQushimchaMalumotListView.as_view()),  # tashkilotlar_Qushimcha_Malumot
     path('tashkilot_tel/', TashkilotTelListView.as_view()),  # tashkilot_tel
 
-    path('mahalla_op_all/', MahallaOpTumanListView.as_view()),   #tanlash uchun   op ga mahalla qo'shish uchun o'zinng tumanining mahallalarini chiqarish
+    path('mahalla_op_all/', MahallaOpTumanListView.as_view()),   # tanlash uchun   op ga mahalla qo'shish uchun o'zinng tumanining mahallalarini chiqarish
     path('mahalla_op_add/', MahallaOpPsotListView.as_view()),   #  qo'shish uchun
     path('mahalla_op/', MahallaOPListView.as_view()),   #  o'ziga biriktirilgan mahallalar ro'yxati
     path('mahalla_op_del/<int:pk>/', MahallaOPDeletePost.as_view()),    # o'ziga biriktirilgan mahallalardan birini o'chirish
