@@ -251,22 +251,18 @@ class UchotApiView(generics.CreateAPIView):
 
             if fuqaro_turi_id == 1 and (request.data['fuqaro'] is not None):
                 fuqaro_uchot = Uchot.objects.filter(fuqaro_id=request.data['fuqaro'])
-                print('fuqaro')
                 return self.frank_func(fuqaro_uchot, uchot_seriazlizer, request.data['uchot_turi_id'], request)
 
             elif (fuqaro_turi_id == 2) and (request.data['usmir'] is not None):
                 usmir_uchot = Uchot.objects.filter(usmir_id=request.data['usmir'])
-                print('usmir')
                 return self.frank_func(usmir_uchot, uchot_seriazlizer, request.data['uchot_turi_id'], request)
 
             elif (fuqaro_turi_id == 3) and (request.data['chetel_fuqaro'] is not None):
                 chetel_uchot = Uchot.objects.filter(chetel_fuqaro_id=request.data['chetel_fuqaro'])
-                print('chetel')
                 return self.frank_func(chetel_uchot, uchot_seriazlizer, request.data['uchot_turi_id'], request)
 
             else:
                 return Response({'message': 'error 222'})
-
 
 '''{
     "fuqaro": 32010,
