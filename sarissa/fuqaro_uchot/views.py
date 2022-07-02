@@ -200,7 +200,7 @@ class UchotApiView(generics.CreateAPIView):
 
     def frank_func(self, human_uchot, uchot_seriazlizer, tur_id, my_request):
         if len(human_uchot) == 0:
-            print(uchot_seriazlizer.is_valid())
+            print(uchot_seriazlizer.is_valid(),'kjjjjjjjj')
             if uchot_seriazlizer.is_valid():
                 uchot_seriazlizer.save(
                     # status=my_request.data['status'],
@@ -213,6 +213,7 @@ class UchotApiView(generics.CreateAPIView):
         elif len(human_uchot) == 1:
             for elem in human_uchot.values():
                 if (elem['uchot_turi_id_id'] != 1) and (elem['uchot_turi_id_id'] != tur_id) and (tur_id != 1):
+                    print(elem['uchot_turi_id_id'], tur_id, 'eeeeeeeeeeeeeeeee')
                     if uchot_seriazlizer.is_valid():
                         uchot_seriazlizer.save(
                             tashkilot_id_id=my_request.user.tashkilot_id,
@@ -231,7 +232,7 @@ class UchotApiView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
 
-        uchot_seriazlizer = UchotListSerializer(data=request.data)
+        uchot_seriazlizer = UchotListSerializerPost(data=request.data)
         fuqaro_turi_id = request.data['fuqaro_turi_id']
 
         fuqaro = request.data['fuqaro']
@@ -251,6 +252,7 @@ class UchotApiView(generics.CreateAPIView):
 
             if fuqaro_turi_id == 1 and (request.data['fuqaro'] is not None):
                 fuqaro_uchot = Uchot.objects.filter(fuqaro_id=request.data['fuqaro'])
+                print(fuqaro_uchot.values(),'ggggggggggggggggggggggggggggggggggggggggggggggggggggggg')
                 return self.frank_func(fuqaro_uchot, uchot_seriazlizer, request.data['uchot_turi_id'], request)
 
             elif (fuqaro_turi_id == 2) and (request.data['usmir'] is not None):
@@ -556,6 +558,7 @@ class UchotTashkilotBuyichaList(APIView):
         serializer = UchotTashkilotlarBuyichaSerializer(tash, many=True)
         return Response({'message': tuman_id, 'data': serializer.data})
 
+'''OP ning o'zi uchotga olgan ko'chalari bo'yicha svot chiqaradi'''
 class OpAholiKuchaBuyichaList(APIView):
 
     def get(self, request):

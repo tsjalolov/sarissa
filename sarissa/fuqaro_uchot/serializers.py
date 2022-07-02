@@ -9,6 +9,10 @@ class UchotTuriListSerializer(serializers.ModelSerializer):
         model = UchotTuri
         fields = '__all__'
 
+class UchotListSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = Uchot
+        exclude = ('add_user_id', 'tashkilot_id')
 
 class UchotListSerializer(serializers.ModelSerializer):
     fuqaro = FuqaroSerializer()
@@ -24,20 +28,20 @@ class UchotListSerializer(serializers.ModelSerializer):
         model = Uchot
         exclude = ('add_user_id', 'tashkilot_id')
 
-    def validate_kucha_id(self, data):
-        if data.id == None:
-            raise serializers.ValidationError('')
-        return data
-
-    def validate_uchot_turi_id(self, data):
-        if data.id == None:
-            raise serializers.ValidationError('')
-        return data
-
-    def validate_fuqaro_turi_id(self, data):
-        if data.id == None:
-            raise serializers.ValidationError('')
-        return data
+    # def validate_kucha_id(self, data):
+    #     if data.id == None:
+    #         raise serializers.ValidationError('')
+    #     return data
+    #
+    # def validate_uchot_turi_id(self, data):
+    #     if data.id == None:
+    #         raise serializers.ValidationError('')
+    #     return data
+    #
+    # def validate_fuqaro_turi_id(self, data):
+    #     if data.id == None:
+    #         raise serializers.ValidationError('')
+    #     return data
 
 
 class MahallaOPKuchaSerializer(serializers.ModelSerializer):
@@ -100,3 +104,5 @@ class OpAholiKuchaBuyichaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Uchot
         fields = ('kuchaa_id',  'fuqarolar_soni', 'usmirlar_soni', 'chetlar_soni', 'jami','kuchaa_name')
+
+

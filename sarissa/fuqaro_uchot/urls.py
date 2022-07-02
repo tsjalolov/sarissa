@@ -4,6 +4,7 @@ from .views import *
 urlpatterns = [
    # path('uchot_id/', FuqaroUchotApi.as_view()),
     path('uchot_api/', UchotApiView.as_view()),
+
     path('uchot_api_tekshirish/', UchotTekshirishGet.as_view()),
     path('uchot_turi/', UchotTuriListView.as_view()),
     path('uchot_mahalla/', MahallaOPListView.as_view()),
