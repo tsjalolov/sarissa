@@ -168,29 +168,6 @@ class UchotTekshirishGet(APIView):
 
                 return Response({'message': 'usmir id yoq', 'uchot_turlariAPI': ''}, status=status.HTTP_404_NOT_FOUND)
 
-
-
-
-
-
-
-
-
-
-
-
-
-#---------------------------
-
-            # elif fuqaro_turi_id == '3':
-            #     chetel_uchot = Uchot.objects.filter(chetel_fuqaro_id=human_id)
-            #     if chetel_uchot:
-            #         serializer_chetl = UchotListSerializer(chetel_uchot, many=True)
-            #         return Response({'data': serializer_chetl.data, 'fuqaro': 'chet el', 'status': 4,
-            #                          'status_message': 'uchotga olingan, yana uchotga olish mumkin'},
-            #                         status=status.HTTP_200_OK)
-            #     return Response({'message': 'chetel id yoq'}, status=status.HTTP_404_NOT_FOUND)
-# --------------
             #chetel
             elif fuqaro_turi_id == '3':
                 chetel_uchot = Uchot.objects.filter(chetel_fuqaro_id=human_id)
