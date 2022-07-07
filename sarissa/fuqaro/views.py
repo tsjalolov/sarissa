@@ -536,3 +536,4 @@ class MahallaOPDeletePost(generics.DestroyAPIView):
     serializer_class = MahallaOPListSerializer
     queryset = Mahalla_op.objects.all()
     permission_classes = (CustomDjangoModelPermissions,)
+

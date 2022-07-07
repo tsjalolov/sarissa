@@ -28,6 +28,30 @@ class UchotListSerializer(serializers.ModelSerializer):
         model = Uchot
         exclude = ('add_user_id', 'tashkilot_id')
 
+class UchotTuriListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UchotTuri
+        fields = '__all__'
+
+
+class FuqaroFilteListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Fuqaro
+        fields = '__all__'
+class UsmirFilteListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usmir
+        fields = '__all__'
+
+class UchotListFilterSerializer(serializers.ModelSerializer):
+    fuqaro = FuqaroFilteListSerializer()
+    usmir = UsmirFilteListSerializer()
+    chetel_fuqaro = ChetElFuqarosiListSerializer()
+
+    class Meta:
+        model = Uchot
+        exclude = ('add_user_id', 'tashkilot_id')
+
     # def validate_kucha_id(self, data):
     #     if data.id == None:
     #         raise serializers.ValidationError('')
@@ -105,4 +129,15 @@ class OpAholiKuchaBuyichaSerializer(serializers.ModelSerializer):
         model = Uchot
         fields = ('kuchaa_id',  'fuqarolar_soni', 'usmirlar_soni', 'chetlar_soni', 'jami','kuchaa_name')
 
+class SSUchotListSerializerPost(serializers.ModelSerializer):
+    add_user_id = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    tashkilot_id = serializers.SlugRelatedField(slug_field='id', read_only=True)
+    class Meta:
+        model = Uchot
+        fields = ('id','status', 'add_user_id', 'fuqaro', 'usmir', 'tashkilot_id', 'fuqaro_turi_id', 'kucha_id', 'uchot_turi_id', 'chetel_fuqaro')
+#         ('chetel_fuqaro', 'tashkilot_id', 'fuqaro_turi_id', 'kucha_id', 'uchot_turi_id')
 
+class UchotListSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = Uchot
+        exclude = ('add_user_id', 'tashkilot_id' )

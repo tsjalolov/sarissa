@@ -142,7 +142,7 @@ AUTH_USER_MODEL = 'fuqaro.CustomUser'
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'uz'
 
 TIME_ZONE = 'UTC'
 

@@ -33,6 +33,7 @@ urlpatterns = [
     path('chetelAlohida/', ChetElAlohidaListView.as_view()),
     path('ChetElCreate/', ChetElCreate.as_view()),
 
+
     # path('chet_el_fuqaro/', ChetElFuqarosiListView.as_view()),  # ChetEl_Fuqaro
 
     path('mkb10/', mkb10ListView.as_view()),  # mkb10

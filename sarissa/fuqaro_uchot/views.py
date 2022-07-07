@@ -98,41 +98,138 @@ class UchotTekshirishGet(APIView):
                     serializer_fuqaro = UchotListSerializer(fuqaro_uchot, many=True)
                     if len(fuqaro_uchot) > 1:
                         return Response({'data': serializer_fuqaro.data, 'fuqaro': 'fuqaro', 'status': 5,
-                                         'status_message': 'uchotga olib bolmaydi'}, status=status.HTTP_200_OK)
+                                         'status_message': 'uchotga olib bolmaydi', 'uchot_turlariAPI': ''}, status=status.HTTP_200_OK)
                     elif len(fuqaro_uchot) == 1:
                         for elem in fuqaro_uchot.values():
                             if elem['uchot_turi_id_id'] != 1:
+                                print(elem['uchot_turi_id_id'])
+                                if elem['uchot_turi_id_id'] == 2:
+                                    qiymat=3
+                                else:
+                                    qiymat=2
+                                uchot_turlariAPI = UchotTuri.objects.filter(id=qiymat)
+                                serializer_uchot_turlariAPI= UchotTuriListSerializer(uchot_turlariAPI, many=True)
+
                                 return Response({'data': serializer_fuqaro.data, 'fuqaro': 'fuqaro', 'status': 4,
-                                                 'status_message': 'uchotga olingan, yana uchotga olish mumkin'},
+                                                 'status_message': 'uchotga olingan, yana uchotga olish mumkin',
+                                                 'uchot_turlariAPI': serializer_uchot_turlariAPI.data},
                                                 status=status.HTTP_200_OK)
+
                             return Response({'data': serializer_fuqaro.data, 'fuqaro': 'fuqaro', 'status': 5,
-                                             'status_message': 'uchotga olib bolmaydi'}, status=status.HTTP_200_OK)
+                                             'status_message': 'uchotga olib bolmaydi', 'uchot_turlariAPI': ''}, status=status.HTTP_200_OK)
                 else:
                     fuqaro = Fuqaro.objects.filter(id=human_id)
                     if fuqaro:
-                        return Response({'status': 6, 'status_message': 'uchotga olish mumkin'},
+                        uchot_turlariAPI = UchotTuri.objects.all()
+                        serializer_uchot_turlariAPI = UchotTuriListSerializer(uchot_turlariAPI, many=True)
+                        return Response({'status': 6, 'status_message': 'uchotga olish mumkin',
+                                         'uchot_turlariAPI': serializer_uchot_turlariAPI.data},
                                         status=status.HTTP_200_OK)
 
                 return Response({'message': 'fuqaro id yoq'}, status=status.HTTP_404_NOT_FOUND)
 
-
+            #usmir
             elif fuqaro_turi_id == '2':
                 usmir_uchot = Uchot.objects.filter(usmir_id=human_id)
-                if usmir_uchot:
-                    serializer_usmir = UchotListSerializer(usmir_uchot, many=True)
-                    return Response({'data': serializer_usmir.data, 'fuqaro': 'usmir', 'status': 4,
-                                     'status_message': 'uchotga olingan, yana uchotga olish mumkin'},
-                                    status=status.HTTP_200_OK)
-                return Response({'message': 'usmir id yoq'}, status=status.HTTP_404_NOT_FOUND)
 
+                if usmir_uchot:
+                    uchot_turi_id = usmir_uchot.values()[0]['uchot_turi_id_id']
+                    serializer_fuqaro = UchotListSerializer(usmir_uchot, many=True)
+                    if len(usmir_uchot) > 1:
+                        return Response({'data': serializer_fuqaro.data, 'fuqaro': 'usmir', 'status': 5,
+                                         'status_message': 'uchotga olib bolmaydi', 'uchot_turlariAPI': ''}, status=status.HTTP_200_OK)
+                    elif len(usmir_uchot) == 1:
+                        for elem in usmir_uchot.values():
+                            if elem['uchot_turi_id_id'] != 1:
+                                # print(elem['uchot_turi_id_id'])
+                                if elem['uchot_turi_id_id'] == 2:
+                                    qiymat = 3
+                                else:
+                                    qiymat = 2
+                                uchot_turlariAPI = UchotTuri.objects.filter(id=qiymat)
+                                serializer_uchot_turlariAPI = UchotTuriListSerializer(uchot_turlariAPI, many=True)
+
+                                return Response({'data': serializer_fuqaro.data, 'fuqaro': 'usmir', 'status': 4,
+                                                 'status_message': 'uchotga olingan, yana uchotga olish mumkin',
+                                                 'uchot_turlariAPI': serializer_uchot_turlariAPI.data},
+                                                status=status.HTTP_200_OK)
+
+                            return Response({'data': serializer_fuqaro.data, 'fuqaro': 'usmir', 'status': 5,
+                                             'status_message': 'uchotga olib bolmaydi',
+                                             'uchot_turlariAPI': ''}, status=status.HTTP_200_OK)
+                else:
+                    fuqaro = Usmir.objects.filter(id=human_id)
+                    if fuqaro:
+                        uchot_turlariAPI = UchotTuri.objects.all()
+                        serializer_uchot_turlariAPI = UchotTuriListSerializer(uchot_turlariAPI, many=True)
+                        return Response({'status': 6, 'status_message': 'uchotga olish mumkin',
+                                         'uchot_turlariAPI': serializer_uchot_turlariAPI.data},
+                                        status=status.HTTP_200_OK)
+
+                return Response({'message': 'usmir id yoq', 'uchot_turlariAPI': ''}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
+
+
+
+
+
+
+
+#---------------------------
+
+            # elif fuqaro_turi_id == '3':
+            #     chetel_uchot = Uchot.objects.filter(chetel_fuqaro_id=human_id)
+            #     if chetel_uchot:
+            #         serializer_chetl = UchotListSerializer(chetel_uchot, many=True)
+            #         return Response({'data': serializer_chetl.data, 'fuqaro': 'chet el', 'status': 4,
+            #                          'status_message': 'uchotga olingan, yana uchotga olish mumkin'},
+            #                         status=status.HTTP_200_OK)
+            #     return Response({'message': 'chetel id yoq'}, status=status.HTTP_404_NOT_FOUND)
+# --------------
+            #chetel
             elif fuqaro_turi_id == '3':
                 chetel_uchot = Uchot.objects.filter(chetel_fuqaro_id=human_id)
+
                 if chetel_uchot:
-                    serializer_chetl = UchotListSerializer(chetel_uchot, many=True)
-                    return Response({'data': serializer_chetl.data, 'fuqaro': 'chet el', 'status': 4,
-                                     'status_message': 'uchotga olingan, yana uchotga olish mumkin'},
-                                    status=status.HTTP_200_OK)
-                return Response({'message': 'chetel id yoq'}, status=status.HTTP_404_NOT_FOUND)
+                    uchot_turi_id = chetel_uchot.values()[0]['uchot_turi_id_id']
+                    serializer_fuqaro = UchotListSerializer(chetel_uchot, many=True)
+                    if len(chetel_uchot) > 1:
+                        return Response({'data': serializer_fuqaro.data, 'fuqaro': 'chet el', 'status': 5,
+                                         'status_message': 'uchotga olib bolmaydi', 'uchot_turlariAPI': ''}, status=status.HTTP_200_OK)
+                    elif len(chetel_uchot) == 1:
+                        for elem in chetel_uchot.values():
+                            if elem['uchot_turi_id_id'] != 1:
+                                # print(elem['uchot_turi_id_id'])
+                                if elem['uchot_turi_id_id'] == 2:
+                                    qiymat = 3
+                                else:
+                                    qiymat = 2
+                                uchot_turlariAPI = UchotTuri.objects.filter(id=qiymat)
+                                serializer_uchot_turlariAPI = UchotTuriListSerializer(uchot_turlariAPI, many=True)
+
+                                return Response({'data': serializer_fuqaro.data, 'fuqaro': 'chet el', 'status': 4,
+                                                 'status_message': 'uchotga olingan, yana uchotga olish mumkin',
+                                                 'uchot_turlariAPI': serializer_uchot_turlariAPI.data},
+                                                status=status.HTTP_200_OK)
+
+                            return Response({'data': serializer_fuqaro.data, 'fuqaro': 'chet el', 'status': 5,
+                                             'status_message': 'uchotga olib bolmaydi',
+                                             'uchot_turlariAPI': ''}, status=status.HTTP_200_OK)
+                else:
+                    fuqaro = Usmir.objects.filter(id=human_id)
+                    if fuqaro:
+                        uchot_turlariAPI = UchotTuri.objects.all()
+                        serializer_uchot_turlariAPI = UchotTuriListSerializer(uchot_turlariAPI, many=True)
+                        return Response({'status': 6, 'status_message': 'uchotga olish mumkin',
+                                         'uchot_turlariAPI': serializer_uchot_turlariAPI.data},
+                                        status=status.HTTP_200_OK)
+
+                return Response({'message': 'chet_el id yoq', 'uchot_turlariAPI': ''}, status=status.HTTP_404_NOT_FOUND)
 
             return Response({'fuqaro': 'yoq'})
 
@@ -579,29 +676,43 @@ class OpAholiKuchaBuyichaList(APIView):
         serializer = OpAholiKuchaBuyichaSerializer(tash, many=True)
         return Response({'message': 'ok', 'data': serializer.data})
 
+'''OP ning o'zi uchotga olganlarni filterlash'''
+class UchotListFilter(generics.ListAPIView):
+    serializer_class = UchotListFilterSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    pagination_class = PageSizeControl
+    # filterset_fields  = ['fuqaro__ism','fuqaro__familiya']
+    # search_fields = ['fuqaro__ism', 'fuqaro__pass_seriya', 'fuqaro__familiya']
+    start_date = DateFilter(field_name='qushulgan_sana', lookup_expr=('gte'))
+    end_date = DateFilter(field_name='qushulgan_sana', lookup_expr=('lte'))
+    date_range = DateRangeFilter(field_name='qushulgan_sana')
 
-# tuman_id=F('kucha_id__mahalla_op__mahalla'),
-'''
-    def list(self, request, *args, **kwargs):
+    class Meta:
+        model = Fuqaro
+        fields = ['qushulgan_sana', ]
 
-        try:
-            tuman_id = int(request.query_params['tuman_id'])
-
-        except ValueError:
-            return Response({'message': 'tuman id xato kiritildi'}, status=status.HTTP_400_BAD_REQUEST)
-
-        tashkilotlar = Tashkilot.objects.filter(tuman_id=tuman_id)
+    def get_queryset(self):
+        user = self.request.user.tashkilot_id
+        return Uchot.objects.select_related('fuqaro', 'usmir', 'chetel_fuqaro').filter(tashkilot_id=user)
 
 
-        massiv_uchot_soni = []
-        tashkilot_name = []
-        tashkilot_id = []
-        for tashkilot in tashkilotlar:
-            trr = Tashkilot.objects.filter(tuman_id=tuman_id)
-            uchot_soni = Uchot.objects.filter(tashkilot_id__in=trr).count()  #tashkilot bo'yicha uchotga olinganlar soni
-            massiv_uchot_soni.append(uchot_soni)
-            # tashkilot_name.append('name'+' : '+tashkilot['name'])
-            # tashkilot_id.append(tashkilot['id'])
 
-        return Response({'tashkilot_name[0]':1}, status=status.HTTP_200_OK)
-'''
+'''sinov'''
+class SSUchotApiView(generics.CreateAPIView):
+    queryset = Uchot.objects.all()
+    serializer_class = SSUchotListSerializerPost
+    permission_classes = (CustomDjangoModelPermissions,)
+
+    def perform_create(self, serializer):
+        serializer.save(add_user_id=self.request.user, tashkilot_id=self.request.user.tashkilot)
+
+    # def create(self, request, *args, **kwargs):
+    #
+    #     uchot_seriazlizer = UchotListSerializerPost(data=request.data)
+    #     fuqaro_turi_id = request.data['fuqaro_turi_id']
+    #
+    #     fuqaro = request.data['fuqaro']
+    #     usmir = request.data['usmir']
+    #     chetel = request.data['chetel_fuqaro']
+    #     human_arr = [fuqaro, usmir, chetel]
+    #     second_arr = []

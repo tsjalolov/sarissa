@@ -279,7 +279,7 @@ class ChetElFuqarosi(models.Model):
     add_user = models.ForeignKey('CustomUser', verbose_name="Kirituvchi", on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.hujjatning_seriyasi_raqami
+        return self.familiya
 
     class Meta:
         ordering = ['-qushilgan_sana']
