@@ -17,7 +17,7 @@ from .serializers import *
 from fuqaro.views import CustomDjangoModelPermissions
 from django_filters import DateRangeFilter, DateFilter
 
-from datetime import datetime
+# from datetime import datetime
 from django.utils import formats
 
 class UchotTuriListView(generics.ListAPIView):
@@ -379,7 +379,7 @@ class UchotTashkilotApiView1(generics.ListAPIView):
                 return Response({'message': 'parametrga xatolik buldi'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 if tur_id == 1:
-                    print('t-------------------------------------------------------------------------t')
+                    # print('t-------------------------------------------------------------------------t')
                     return self.uchot_tash_func(1, users.tashkilot_id)
                 elif tur_id == 2:
                     return self.uchot_tash_func(2, users.tashkilot_id)
@@ -569,68 +569,6 @@ class UchotAgeList(generics.ListAPIView):
         }}, status=status.HTTP_200_OK)
 
 
-'''buxoro viloyati tumanlari bo'yicha uchotga olinganlar soni'''
-class MyPeopleViloyatAllOrm(APIView):
-    def get(self, request):
-        tash = Uchot.objects.\
-            values(tuman_name=F('tashkilot_id__tuman_id__name'), tuman_id=F('tashkilot_id__tuman_id__id'),)\
-            .annotate(
-            fuqarolar_soni = Count('fuqaro', distinct=True),
-            usmirlar_soni = Count('usmir', distinct=True),
-            chetlar_soni = Count('chetel_fuqaro', distinct=True),
-            jami = Count('fuqaro', distinct=True) + Count('usmir', distinct=True) + Count('chetel_fuqaro', distinct=True)
-        )
-        # print(tash.query)
-        serializer = MyPeopleViloyatAllOrmSerializer(tash, many=True)
-        return Response({'message': 'ok', 'data' : serializer.data})
-
-'''
-    def list(self, request, *args, **kwargs):
-        tumanlar = Tuman.objects.filter(viloyat_id=4)
-
-        """tashkilotlarni tuman bo'yicha filterlash"""
-        massiv_tashkilotlar = []
-        massiv_uchot_soni = []
-        tuman_name = []
-        tuman_id = []
-        for tuman in tumanlar.values():
-            tashkilotlar = Tashkilot.objects.filter(tuman_id=tuman['id'])   #  tumanga tegishli tashkilotlar
-            uchot_soni = Uchot.objects.filter(tashkilot_id__in=tashkilotlar).count()  #tuman bo'yicha uchotga olinganlar soni
-            massiv_tashkilotlar.append(tashkilotlar)
-            massiv_uchot_soni.append(uchot_soni)
-            tuman_name.append('name'+' : '+tuman['name'] )
-
-            tuman_id.append('tuman_id' + ' : ' + str(tuman['id']))
-            print(tuman_id, tuman_name, massiv_uchot_soni)
-
-        return Response({'s':tuman_name[0]}, status=status.HTTP_200_OK)
-'''
-
-
-
-'''tumna id kelganda shu tumanga tegishli tashkilotlarning uhcot sonini chiqaradi'''
-class UchotTashkilotBuyichaList(APIView):
-
-    def get(self, request):
-        try:
-            tuman_id = int(request.query_params['tuman_id'])
-        except:
-            return Response({'message': 'tuman_id  xato kiritildi'}, status=status.HTTP_404_NOT_FOUND)
-
-        tuman_id = int(request.query_params['tuman_id'])
-        tash = Uchot.objects.filter(tashkilot_id__tuman_id=35)\
-            .values(tashkilot_name=F('tashkilot_id__nomi'),
-                    tashkilott_id=F('tashkilot_id__id'), malumot=F('tashkilot_id__tashkilot_qushimcha_malumot__fuqarolari_soni')) \
-            .annotate(
-            fuqarolar_soni=Count('fuqaro', distinct=True),
-            usmirlar_soni=Count('usmir', distinct=True),
-            chetlar_soni = Count('chetel_fuqaro', distinct=True),
-            jami = Count('fuqaro', distinct=True) + Count('usmir', distinct=True) + Count('chetel_fuqaro', distinct=True)
-        )
-        # fuqaro_jami = Tashkilot_qushimcha_malumot.objects.(fuqarolari_soni
-        print(tash.query)
-        serializer = UchotTashkilotlarBuyichaSerializer(tash, many=True)
-        return Response({'message': tuman_id, 'data': serializer.data})
 
 '''OP ning o'zi uchotga olgan ko'chalari bo'yicha svot chiqaradi'''
 class OpAholiKuchaBuyichaList(APIView):
@@ -693,3 +631,92 @@ class SSUchotApiView(generics.CreateAPIView):
     #     chetel = request.data['chetel_fuqaro']
     #     human_arr = [fuqaro, usmir, chetel]
     #     second_arr = []
+
+
+'''------------boshliq uchunnnnnnnn---------'''
+
+
+'''buxoro viloyati tumanlari bo'yicha uchotga olinganlar soni'''
+class MyPeopleViloyatAllOrm(APIView):
+    def get(self, request):
+        tash = Uchot.objects.\
+            values(tuman_name=F('tashkilot_id__tuman_id__name'), tuman_id=F('tashkilot_id__tuman_id__id'),)\
+            .annotate(
+            fuqarolar_soni = Count('fuqaro', distinct=True),
+            usmirlar_soni = Count('usmir', distinct=True),
+            chetlar_soni = Count('chetel_fuqaro', distinct=True),
+            jami = Count('fuqaro', distinct=True) + Count('usmir', distinct=True) + Count('chetel_fuqaro', distinct=True)
+        )
+        # print(tash.query)
+        serializer = MyPeopleViloyatAllOrmSerializer(tash, many=True)
+        return Response({'message': 'ok', 'data' : serializer.data})
+
+'''
+    def list(self, request, *args, **kwargs):
+        tumanlar = Tuman.objects.filter(viloyat_id=4)
+
+        """tashkilotlarni tuman bo'yicha filterlash"""
+        massiv_tashkilotlar = []
+        massiv_uchot_soni = []
+        tuman_name = []
+        tuman_id = []
+        for tuman in tumanlar.values():
+            tashkilotlar = Tashkilot.objects.filter(tuman_id=tuman['id'])   #  tumanga tegishli tashkilotlar
+            uchot_soni = Uchot.objects.filter(tashkilot_id__in=tashkilotlar).count()  #tuman bo'yicha uchotga olinganlar soni
+            massiv_tashkilotlar.append(tashkilotlar)
+            massiv_uchot_soni.append(uchot_soni)
+            tuman_name.append('name'+' : '+tuman['name'] )
+
+            tuman_id.append('tuman_id' + ' : ' + str(tuman['id']))
+            print(tuman_id, tuman_name, massiv_uchot_soni)
+
+        return Response({'s':tuman_name[0]}, status=status.HTTP_200_OK)
+'''
+
+
+
+'''tumna id kelganda shu tumanga tegishli tashkilotlarning uhcot sonini chiqaradi'''
+
+
+class UchotTashkilotBuyichaList(APIView):
+
+    def get(self, request):
+        try:
+            tuman_id = int(request.query_params['tuman_id'])
+        except:
+            return Response({'message': 'tuman_id  xato kiritildi'}, status=status.HTTP_404_NOT_FOUND)
+
+        tuman_id = int(request.query_params['tuman_id'])
+        tash = Uchot.objects.filter(tashkilot_id__tuman_id=35)\
+            .values(tashkilot_name=F('tashkilot_id__nomi'),
+                    tashkilott_id=F('tashkilot_id__id'), malumot=F('tashkilot_id__tashkilot_qushimcha_malumot__fuqarolari_soni')) \
+            .annotate(
+            fuqarolar_soni=Count('fuqaro', distinct=True),
+            usmirlar_soni=Count('usmir', distinct=True),
+            chetlar_soni = Count('chetel_fuqaro', distinct=True),
+            jami = Count('fuqaro', distinct=True) + Count('usmir', distinct=True) + Count('chetel_fuqaro', distinct=True)
+        )
+        # fuqaro_jami = Tashkilot_qushimcha_malumot.objects.(fuqarolari_soni
+        # print(tash.query)
+        serializer = UchotTashkilotlarBuyichaSerializer(tash, many=True)
+        return Response({'message': tuman_id, 'data': serializer.data})
+
+class BruyxatdanutganiList(generics.ListAPIView):
+    queryset = Uchot.objects.all()
+    serializer_class = UchotListSerializer
+    permission_classes = [DjangoModelPermissions, ]
+    pagination_class = PageSizeControl
+
+    def list(self, request, *args, **kwargs):
+        users = request.user
+
+        fuqaro = Uchot.objects.filter(fuqaro_turi_id=1).distinct('fuqaro').count()
+        usmir = Uchot.objects.filter(fuqaro_turi_id=2).distinct('usmir').count()
+        chetel = Uchot.objects.filter(fuqaro_turi_id=3).distinct('chetel_fuqaro').count()
+        jami = fuqaro + usmir + chetel
+        return Response({
+            'jami': jami,
+            'fuqaro': fuqaro,
+            'usmir': usmir,
+            'chet el': chetel
+        }, status=status.HTTP_200_OK)

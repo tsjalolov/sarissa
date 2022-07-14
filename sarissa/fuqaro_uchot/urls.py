@@ -18,11 +18,20 @@ urlpatterns = [
     # path('one/',one),
     # path('fuqaro_search/', FuqaroUchotSearch.as_view()),
     path('uchototchot/', Ruyxatdanutgani.as_view()),
-    path('uchottuman/', MyPeopleViloyatAllOrm.as_view()),
-    path('uchottashkilot/', UchotTashkilotBuyichaList.as_view()),
+
+
     path('opaholi/', OpAholiKuchaBuyichaList.as_view()),
 
     path('uchotfilter/', UchotListFilter.as_view()),
+
+    path('uchottashkilot/', UchotTashkilotBuyichaList.as_view()),
+    path('uchottuman/', MyPeopleViloyatAllOrm.as_view()),
+    path('bruyxatdanutgani/', BruyxatdanutganiList.as_view()),
+
+
+
+
+
 
 
 ]
